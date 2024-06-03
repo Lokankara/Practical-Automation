@@ -61,19 +61,11 @@ class ClubsPageTest {
     @BeforeAll
     public void setUpAll() {
         WebDriverManager.chromedriver().setup();
-
         ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--remote-allow-origins=*");
-        chromeOptions.addArguments("--disable-gpu");
-        chromeOptions.addArguments("--no-sandbox");
-        chromeOptions.addArguments("--disable-dev-sh-usage");
-        chromeOptions.addArguments("--remote-debugging-port=9222");
         chromeOptions.addArguments("--headless");
-//        chromeOptions.addArguments("--window-size=1920,1080");
         driver = new ChromeDriver(chromeOptions);
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         executor = (JavascriptExecutor) driver;
-//        driver.get(BASE_URL);
     }
 
     @BeforeEach
