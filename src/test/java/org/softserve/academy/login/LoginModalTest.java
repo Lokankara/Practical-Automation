@@ -49,9 +49,7 @@ class LoginModalTest {
     @BeforeAll
     public void setUpAll() {
         WebDriverManager.chromedriver().setup();
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless");
-        driver = new ChromeDriver(chromeOptions);
+        driver = new ChromeDriver();
         executor = (JavascriptExecutor) driver;
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }

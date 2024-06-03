@@ -61,9 +61,7 @@ class ClubsPageTest {
     @BeforeAll
     public void setUpAll() {
         WebDriverManager.chromedriver().setup();
-        ChromeOptions chromeOptions = new ChromeOptions();
-        chromeOptions.addArguments("--headless");
-        driver = new ChromeDriver(chromeOptions);
+        driver = new ChromeDriver();
         wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         executor = (JavascriptExecutor) driver;
     }
