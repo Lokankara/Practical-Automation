@@ -38,7 +38,13 @@ class RegistrationModalTest {
     @BeforeAll
     void setUpAll() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        if ("true".equals(System.getenv("CI"))) {
+            chromeOptions.addArguments("--headless");
+            chromeOptions.addArguments("--no-sandbox");
+            chromeOptions.addArguments("--disable-dev-shm-usage");
+        }
+        driver = new ChromeDriver(chromeOptions);
         executor = (JavascriptExecutor) driver;
         wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
