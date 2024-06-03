@@ -1,9 +1,12 @@
+local.properties
+
 # Compiled class file
 *.class
 
 # Log file
 *.log
 *.log.*
+test-log.txt
 
 # BlueJ files
 *.ctxt
@@ -57,7 +60,6 @@ target
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
@@ -109,29 +111,20 @@ gradle-app.setting
 # Cache of project
 .gradletasknamecache
 
-# Eclipse Gradle plugin generated files
-# Eclipse Core
-.project
-# JDT-specific (Eclipse Java Development Tools)
-.classpath
-
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
 # Compiled output
-/dist
+
 /tmp
 /out-tsc
 /bazel-out
 
 # Node
-/node_modules
 npm-debug.log
 yarn-error.log
 
 # IDEs and editors
 .idea/
-.project
-.classpath
 .c9/
 *.launch
 .settings/
@@ -149,13 +142,11 @@ yarn-error.log
 /.angular/cache
 .sass-cache/
 /connect.lock
-/coverage
 /libpeerconnection.log
 testem.log
 /typings
 
 # System files
-.DS_Store
 Thumbs.db
 
 # Byte-compiled / optimized / DLL files
@@ -185,9 +176,6 @@ share/python-wheels/
 *.egg
 MANIFEST
 
-# PyInstaller
-#  Usually these files are written by a python script from a template
-#  before PyInstaller builds the exe, so as to inject date/other infos into it.
 *.manifest
 *.spec
 
@@ -215,7 +203,6 @@ cover/
 *.pot
 
 # Django stuff:
-*.log
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
@@ -232,7 +219,6 @@ docs/_build/
 
 # PyBuilder
 .pybuilder/
-target/
 
 # Jupyter Notebook
 .ipynb_checkpoints
@@ -246,26 +232,6 @@ ipython_config.py
 #   intended to run in multiple environments; otherwise, check them in:
 # .python-version
 
-# pipenv
-#   According to pypa/pipenv#598, it is recommended to include Pipfile.lock in version control.
-#   However, in case of collaboration, if having platform-specific dependencies or dependencies
-#   having no cross-platform support, pipenv may install dependencies that don't work, or not
-#   install all needed dependencies.
-#Pipfile.lock
-
-# poetry
-#   Similar to Pipfile.lock, it is generally recommended to include poetry.lock in version control.
-#   This is especially recommended for binary packages to ensure reproducibility, and is more
-#   commonly ignored for libraries.
-#   https://python-poetry.org/docs/basic-usage/#commit-your-poetrylock-file-to-version-control
-#poetry.lock
-
-# pdm
-#   Similar to Pipfile.lock, it is generally recommended to include pdm.lock in version control.
-#pdm.lock
-#   pdm stores project-wide configurations in .pdm.toml, but it is recommended to not include it
-#   in version control.
-#   https://pdm.fming.dev/#use-with-ide
 .pdm.toml
 
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow and github.com/pdm-project/pdm
@@ -279,7 +245,6 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
 .venv
 env/
 venv/
@@ -312,17 +277,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-rover/src/app/py/.venv/Lib/site-packages/pip-24.0.dist-info/
-rover/src/app/py/.venv/Lib/site-packages/pip/
-rover/src/app/py/.venv/Lib/site-packages/*
-rover/src/app/py/.venv/Scripts/*
-rover/src/app/py/.venv/__pycache__/*
-rover/src/app/py/.venv/.pytest_cache/*
