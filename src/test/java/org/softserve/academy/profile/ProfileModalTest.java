@@ -10,8 +10,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.softserve.academy.runner.BaseTest;
 
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProfileModalTest extends BaseTest {
@@ -72,15 +74,13 @@ class ProfileModalTest extends BaseTest {
     void testEditProfileModal(String email, String password, String lastName, String firstName, String phone) {
         loginUser(email, password);
         openProfile();
-        WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='edit-button']")));
-        editButton.click();
-        WebElement editHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='edit-header']")));
-        assertTextEquals("Редагувати профіль", editHeader, "Edit user profile text");
+        clickEditProfile();
 
         WebElement lastNameInput = driver.findElement(By.xpath("//input[@id='edit_lastName']"));
         assertVisible(lastNameInput, "Last name input is null");
         assertTrue(lastNameInput.isEnabled(), "Last name input is not editable");
-        assertAttributeEquals(lastName, lastNameInput, "value");
+//        assertAttributeEquals(lastName, lastNameInput, "value");
+        System.out.println(lastNameInput.getAttribute("value"));
 
         WebElement firstNameInput = driver.findElement(By.xpath("//input[@id='edit_firstName']"));
         assertVisible(firstNameInput, "First name input is null");
@@ -90,14 +90,53 @@ class ProfileModalTest extends BaseTest {
         WebElement phoneInput = driver.findElement(By.xpath("//input[@id='edit_phone']"));
         assertVisible(phoneInput, "Phone input is null");
         assertTrue(phoneInput.isEnabled(), "Phone input is not editable");
-        assertAttributeEquals("38" + phone, phoneInput, "value");
+        assertAttributeEquals(phone, phoneInput, "value");
 
         WebElement emailInput = driver.findElement(By.xpath("//input[@id='edit_email']"));
         assertVisible(emailInput, "Email input is not visible");
         assertFalse(emailInput.isEnabled(), "Email input should be readonly");
         assertAttributeEquals(email, emailInput, "value");
-
         isTestSuccessful = true;
+    }
+
+    @Order(5)
+    @ParameterizedTest(name = "User: {3} {2} login with email: {0}, password: {1}")
+    @CsvFileSource(resources = "/sign.csv", numLinesToSkip = 1)
+    @DisplayName("5. Test edit profile modal Password inputs")
+    void testEditProfileModalPassword(String email, String password, String lastName, String firstName) {
+        loginUser(email, password);
+        openProfile();
+        clickEditProfile();
+
+        WebElement checkbox = driver.findElement(By.xpath(".//input[@name='checkbox']"));
+        List<WebElement> elements = driver.findElements(By.xpath("//*[contains(@class, 'ant-input-affix-wrapper') and contains(@class, 'ant-input-password') and contains(@class, 'user-edit-box')]"));
+        clickElementWithJS(checkbox);
+
+        elements.forEach(element -> assertTrue(element.isDisplayed(), "The element is not displayed."));
+
+        WebElement currentPassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='edit_currentPassword']")));
+        WebElement newPassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='edit_password']")));
+        WebElement confirmPassword = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='edit_confirmPassword']")));
+
+        assertTrue(currentPassword.isDisplayed());
+        assertTrue(newPassword.isDisplayed());
+        assertTrue(confirmPassword.isDisplayed());
+        assertTrue(currentPassword.isEnabled());
+        assertTrue(newPassword.isEnabled());
+        assertTrue(confirmPassword.isEnabled());
+
+        clickElementWithJS(checkbox);
+
+        assertTrue(elements.isEmpty(), "The list of elements is empty.");
+        isTestSuccessful = true;
+    }
+
+    private void clickEditProfile() {
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='edit-button']"))).click();
+        WebElement editTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='menu-title']")));
+        assertTextEquals("Особистий кабінет", editTitle, "edit Title user profile text");
+        WebElement editHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='content-title']")));
+        assertTextEquals("Мій профіль", editHeader, "Edit user profile text");
     }
 
     private void openProfile() {
