@@ -228,7 +228,7 @@ class LoginModalTest extends BaseTest {
         openModalWindow();
 
         fillAndAssertField(EMAIL_INPUT_XPATH, email);
-        fillAndAssertField(PASSWORD_INPUT_XPATH, password);
+        fillAndAssertField(PASSWORD_INPUT_XPATH, "");
 
         WebElement loginButton = getLoginButton();
         clickElementWithJS(loginButton);
