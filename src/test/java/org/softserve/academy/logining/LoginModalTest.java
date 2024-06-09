@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.junit.jupiter.params.provider.EmptySource;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.softserve.academy.provider.InvalidEmailProvider;
@@ -22,7 +21,6 @@ import org.softserve.academy.runner.BaseTest;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -37,12 +35,7 @@ class LoginModalTest extends BaseTest {
     private static final String PROFILE_MENU_XPATH = "//li[contains(@class, 'ant-dropdown-menu-item-only-child') and contains(@data-menu-id, '-profile')]";
     private static final String DROPDOWN_MENU_PROFILE_XPATH = "//*[@class='ant-dropdown-trigger user-profile']";
     private static final String MESSAGE_SUCCESS_XPATH = "//div[contains(@class, 'ant-message-notice-content')]";
-    private static final String DROPDOWN_MENU_XPATH = "//ul[contains(@class, 'ant-dropdown-menu')]";
-    private static final String LOGIN_BUTTON_XPATH = "//button[contains(@class, 'login-button')]";
-    private static final String USER_ICON_XPATH = "//*[name()='svg'][@data-icon='user']";
-    private static final String PASSWORD_INPUT_XPATH = "//*[@id='basic_password']";
     private static final String LOGIN_HEADER_XPATH = "//*[@class='login-header']";
-    private static final String EMAIL_INPUT_XPATH = "//*[@id='basic_email']";
     private static final String expectedColorRed = "#ff4d4f";
     private static final String EMAIL = "nenix55377@hutov.com";
     private static final String PASSWORD = "Elv3nWay!";
@@ -307,12 +300,11 @@ class LoginModalTest extends BaseTest {
         fillAndAssertRestoreField(email);
 
         WebElement restoreButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'Відновити')]")));
-        assertTrue(restoreButton.isEnabled(), "Restore button is not enabled");
+        assertEnable(restoreButton, "Restore button");
         restoreButton.click();
         WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'ant-message-notice') and contains(@class, 'ant-message-notice-error')]")));
 
-        assertTrue(errorMessage.isDisplayed(), "Error message is not visible");
-        assertEquals(expected, errorMessage.getText(), "Error message text should be " + expected);
+        assertTextEquals(expected, errorMessage, String.format("Error message text should be %s %s", expected, email));
         assertLoginHeader();
         isTestSuccessful = true;
     }
@@ -320,16 +312,8 @@ class LoginModalTest extends BaseTest {
     private void clickRestoreLink() {
         WebElement restoreLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='restore-password-button']")));
         assertVisible(restoreLink, "Restore link");
-        assertTrue(restoreLink.isEnabled(), "Restore link is not enabled");
+        assertEnable(restoreLink, "Restore link");
         clickElementWithJS(restoreLink);
-    }
-
-    private static WebElement getLoginButton() {
-        WebElement loginButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(LOGIN_BUTTON_XPATH)));
-        assertVisible(loginButton, "Login button");
-        assertTrue(loginButton.isEnabled(), "Login button should be enabled after filling all fields");
-        assertFalse(loginButton.getAttribute("class").contains("ant-btn-disabled"), "Login button should be enabled after filling all fields");
-        return loginButton;
     }
 
     private static void fillAndAssertRestoreField(String email) {
@@ -337,31 +321,6 @@ class LoginModalTest extends BaseTest {
         assertVisible(restoreInput, "Restore Input");
         assertTrue(restoreInput.isEnabled(), "Restore Input is not enabled");
         restoreInput.sendKeys(email);
-    }
-
-    private WebElement fillAndAssertField(String fieldxpath, String value) {
-        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(fieldxpath)));
-        assertNotNull(field, "Field with XPath '" + fieldxpath + "' should be present");
-        field.sendKeys(value);
-        return field;
-    }
-
-    private void openModalWindow() {
-        WebElement userIcon = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(USER_ICON_XPATH)));
-        scrollToElement(userIcon);
-        clickElementWithJS(userIcon);
-        WebElement dropdownMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DROPDOWN_MENU_XPATH)));
-        assertNotNull(dropdownMenu);
-
-        WebElement menuItem = findElementContainingText();
-        scrollToElement(menuItem);
-        clickElementWithJS(menuItem);
-    }
-
-    private WebElement findElementContainingText() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        String script = "return Array.from(document.querySelectorAll(\"li[role='menuitem'] div\")).find(element => element.textContent.includes(\"Увійти\"));";
-        return (WebElement) js.executeScript(script);
     }
 
     private void assertLoginHeader() {

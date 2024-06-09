@@ -26,6 +26,7 @@ import java.time.Duration;
 import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -33,9 +34,13 @@ public abstract class BaseTest {
 
     protected static final String BASE_URL = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev";
     private static final String TIME_TEMPLATE = "yyyy-MM-dd_HH-mm-ss-S";
-    private static final String LOGIN_HEADER_SELECTOR = ".login-header";
-    private static final String USER_ICON_CSS_SELECTOR = "svg[data-icon='user']";
+    protected static final String DROPDOWN_MENU_XPATH = "//ul[contains(@class, 'ant-dropdown-menu')]";
     private static final String LOGIN_MENU_ITEM_XPATH = "//li[@role='menuitem']//div[text()='Увійти']";
+    private static final String LOGIN_BUTTON_XPATH = "//button[contains(@class, 'login-button')]";
+    protected static final String USER_ICON_XPATH = "//*[name()='svg'][@data-icon='user']";
+    protected static final String PASSWORD_INPUT_XPATH = "//*[@id='basic_password']";
+    protected static final String MESSAGE_SUCCESS_SELECTOR = ".ant-message-success";
+    protected static final String EMAIL_INPUT_XPATH = "//*[@id='basic_email']";
     private static final String GRAND_COURSE = "IT освіта: курси \"ГРАНД\"";
     private static final String LEAVE_COMMENT_MESSAGE = "Leave Comment Button";
     private static final String EXPECTED_COMMENT_HEADER = "Залишити коментар";
@@ -76,7 +81,7 @@ public abstract class BaseTest {
             }
             driver = new ChromeDriver(chromeOptions);
             executor = (JavascriptExecutor) driver;
-            wait = new WebDriverWait(driver, Duration.ofSeconds(12));
+            wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         } catch (Exception e) {
             System.err.println(e.getMessage());
             Assertions.fail("Setup failed: " + e.getMessage());
@@ -94,21 +99,45 @@ public abstract class BaseTest {
         }
     }
 
-    private void loginUser(String email, String password) {
-        WebElement userIcon = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(USER_ICON_CSS_SELECTOR)));
+    protected void loginUser(String email, String password) {
+        openModalWindow();
+        fillAndAssertField(EMAIL_INPUT_XPATH, email);
+        fillAndAssertField(PASSWORD_INPUT_XPATH, password);
+        WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(MESSAGE_SUCCESS_SELECTOR)));
+        assertVisible(successMessage, "Success message");
+    }
+
+    protected void openModalWindow() {
+        WebElement userIcon = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(USER_ICON_XPATH)));
+        assertEnable(userIcon, "After filling all fields login button");
         scrollToElement(userIcon);
         clickElementWithJS(userIcon);
+        WebElement dropdownMenu = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(DROPDOWN_MENU_XPATH)));
+        assertNotNull(dropdownMenu);
+        WebElement menuItem = findElementContainingText();
+        scrollToElement(menuItem);
+        clickElementWithJS(menuItem);
+    }
 
-        WebElement loginMenuItem = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(LOGIN_MENU_ITEM_XPATH)));
-        assertNotNull(loginMenuItem, "Login MenuItem should be present");
-        assertTrue(loginMenuItem.isDisplayed(), "Login MenuItem should be visible after clicking the 'Login' menu item");
-        scrollToElement(loginMenuItem);
-        clickElementWithJS(loginMenuItem);
-        WebElement loginHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(LOGIN_HEADER_SELECTOR)));
-        assertNotNull(loginHeader, "Login modal should be visible after clicking the 'Login' menu item");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#basic_email"))).sendKeys(email);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("#basic_password"))).sendKeys(password);
-        clickElementWithJS(wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(".login-button"))));
+    protected WebElement fillAndAssertField(String fieldxpath, String value) {
+        WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(fieldxpath)));
+        assertNotNull(field, "Field with XPath '" + fieldxpath + "' should be present");
+        field.sendKeys(value);
+        return field;
+    }
+
+    private WebElement findElementContainingText() {
+        JavascriptExecutor js = (JavascriptExecutor) driver;
+        String script = "return Array.from(document.querySelectorAll(\"li[role='menuitem'] div\")).find(element => element.textContent.includes(\"Увійти\"));";
+        return (WebElement) js.executeScript(script);
+    }
+
+    protected WebElement getLoginButton() {
+        WebElement loginButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(LOGIN_BUTTON_XPATH)));
+        assertVisible(loginButton, "Login button");
+        assertTrue(loginButton.isEnabled(), "Login button should be enabled after filling all fields");
+        assertFalse(loginButton.getAttribute("class").contains("ant-btn-disabled"), "Login button should be enabled after filling all fields");
+        return loginButton;
     }
 
     protected void assertEnable(WebElement element, String message) {
