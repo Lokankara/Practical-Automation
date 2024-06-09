@@ -56,8 +56,11 @@ class LoginModalTest extends BaseTest {
     @Order(2)
     @DisplayName("2. Test clicking on 'Login' menu item")
     void testClickLoginMenuItem() {
+        String expectedUrl = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev/";
         openModalWindow();
+        wait.until(ExpectedConditions.urlToBe(expectedUrl));
 
+        assertEquals(expectedUrl, driver.getCurrentUrl(), "URL should be the clubs page URL");
         isTestSuccessful = true;
     }
 
