@@ -1,19 +1,32 @@
-## Practical-Automation
+# Searching Web Elements by XPath 
+[Link](https://github.com/it-acad/taqc-sprint-searching-by-xpath-Lokankara)
 
-[![Java CI with Maven](https://github.com/Lokankara/Practical-Automation/actions/workflows/maven.yml/badge.svg)](https://github.com/Lokankara/Practical-Automation/actions/workflows/maven.yml)
+## Task 1
+1. Open the LoginModalTest class.
+2. Analyze the changes compared to the previous implementation.
+3. Change all necessary CSS selectors to XPaths, add the implementations of the missing tests. 
+4. Verify the correctness of the execution.
+5. Implement the specified negative login scenarios on the page.
 
-Build the project with Maven Tool
+## Task 2
+Prerequisite for completing this task: being logged in.
+In this task you need to do the following:
 
-`mvn -B package --file pom.xml`
+Find the "Гуртки" tab using
+Navigate to the 2nd page
+Find and open the card "IT освіта: курси 'ГРАНД'"
+Find and click the "Залишити коментар" button
+Write a comment, rate it, and click the "Надіслати" button
+Implement different possible negative scenarios.
+For locating all elements, use XPath.
 
-Clean, install, and generate report
+## Task 3
+Prerequisite for completing this task: being logged in.
+"Navigate to the 'Особистий кабінет' settings
+Find 'Редагувати профіль'
+Change personal information and password
+Write positive and negative tests
+Use XPath for locating elements"
 
-`mvn clean install site -P test`
-
-Clean, install with details
-
-`mvn clean install -X`
-
-Clean, install skip Test
-
-`mvn clean install -DskipTests`
+## Additional task (optional)
+1. Parameterized Test Code where its possible.

@@ -1,12 +1,8 @@
-email,password,lastName,firstName,phone
-nipibaw191@fresec.com,Secret123!,Took,Peregrin,0123456789
-wefego4638@jahsec.com,Adventure$4me,Brandybuck,Meriadoc,0987654321
-wereken128@hutov.com,R1ngBearer!,Baggins,Bilbo,0123456789
-lijoyiv225@hutov.com,Gard3ner#,Gamgee,Samwise,0234567890
-kipifah935@jzexport.com,TeaTime3!,Took,Belladonna,0345678901
-bigigoc750@jahsec.com,HorseL0ver%,Brandybuck,Esmeralda,0456789012
-nenix55377@hutov.com,Elv3nWay!,Baggins,Frodo,0567890123
-jexosig648@fresec.com,ShireChef8^,Took,Mirabella,0678901234
-sirive1156@fresec.com,BookW0rm!,Brandybuck,Adalgrim,0789012345
-vanob78455@jzexport.com,Fish1ngFun!,Baggins,Drogo,0891234567
-rinifeh309@jzexport.com,TestPassword123!,TestLastName,TestFirstName,0123456789
+email,password,lastName,firstName,phone,comment
+nipibaw191@fresec.com,Secret123!,Took,Peregrin,0123456789,Great teamwork during activities!
+wefego4638@jahsec.com,Adventure$4me,Brandybuck,Meriadoc,0987654321,Shows enthusiasm in club projects.
+wereken128@hutov.com,R1ngBearer!,Baggins,Bilbo,0123456789,Respectful and listens well to instructions.
+lijoyiv225@hutov.com,Gard3ner#,Gamgee,Samwise,0234567890,Always willing to help others.
+kipifah935@jzexport.com,TeaTime3!,Took,Belladonna,0345678901,Displays creativity in tasks.
+nenix55377@hutov.com,Elv3nWay!,Baggins,Frodo,0567890123,Demonstrates good sportsmanship.
+jexosig648@fresec.com,ShireChef8^,Took,Mirabella,0678901234,Keeps a tidy and organized space.
