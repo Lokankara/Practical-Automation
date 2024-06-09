@@ -16,6 +16,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.softserve.academy.provider.InvalidEmailProvider;
 import org.softserve.academy.provider.ProvideLoginArguments;
+import org.softserve.academy.provider.ValidEmailProvider;
 import org.softserve.academy.runner.BaseTest;
 
 import java.util.List;
@@ -29,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Login Modal Tests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class LoginModalTest extends BaseTest {
+
+    private static final String EMAIL_ICON_XPATH = "//*[contains(@class, 'anticon') and contains(@class, 'anticon-mail')]/following-sibling::*[contains(@class, 'ant-form-item-feedback-icon') and contains(@class, 'ant-form-item-feedback-icon-error')]";
     private static final String NOTICE_ERROR_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' ant-message-notice ') and contains(concat(' ', normalize-space(@class), ' '), ' ant-message-notice-error ')]";
     private static final String ERROR_ICON_XPATH = "//*[contains(@class, 'ant-form-item-feedback-icon')][contains(@class, 'ant-form-item-feedback-icon-error')]";
     private static final String PROFILE_MENU_XPATH = "//li[contains(@class, 'ant-dropdown-menu-item-only-child') and contains(@data-menu-id, '-profile')]";
@@ -230,8 +233,7 @@ class LoginModalTest extends BaseTest {
         fillAndAssertField(EMAIL_INPUT_XPATH, email);
         fillAndAssertField(PASSWORD_INPUT_XPATH, "");
 
-        WebElement loginButton = getLoginButton();
-        clickElementWithJS(loginButton);
+        clickElementWithJS(getLoginButton());
         WebElement emailIcon = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(ERROR_ICON_XPATH)));
 
 //        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class, 'ant-message-error')]")));
@@ -254,7 +256,7 @@ class LoginModalTest extends BaseTest {
 
         WebElement loginButton = getLoginButton();
         clickElementWithJS(loginButton);
-        WebElement emailIcon = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(".ant-form-item-feedback-icon")));
+        WebElement emailIcon = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(EMAIL_ICON_XPATH)));
 
         assertLoginHeader();
         checkErrorIconClass(emailIcon);
@@ -278,12 +280,63 @@ class LoginModalTest extends BaseTest {
         isTestSuccessful = true;
     }
 
+    @Order(11)
+    @DisplayName("11. Test login Restore with invalid email")
+    @ParameterizedTest(name = "Login Restore with invalid email: {0}")
+    @ArgumentsSource(InvalidEmailProvider.class)
+    void testLoginRestoreWithInvalidEmail(String email) {
+        openModalWindow();
+        clickRestoreLink();
+        fillAndAssertRestoreField(email);
+
+        WebElement emailIcon = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(EMAIL_ICON_XPATH)));
+
+        checkErrorIconClass(emailIcon);
+        assertLoginHeader();
+        isTestSuccessful = true;
+    }
+
+    @Order(12)
+    @DisplayName("12. Test login Restore for unAuthorized user")
+    @ParameterizedTest(name = "Login Restore for unAuthorized user: {0}")
+    @ArgumentsSource(ValidEmailProvider.class)
+    void testLoginRestoreWithUnAuthorizedEmail(String email) {
+        final String expected = "Користувача з вказаним емейлом не знайдено";
+        openModalWindow();
+        clickRestoreLink();
+        fillAndAssertRestoreField(email);
+
+        WebElement restoreButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//span[contains(text(),'Відновити')]")));
+        assertTrue(restoreButton.isEnabled(), "Restore button is not enabled");
+        restoreButton.click();
+        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'ant-message-notice') and contains(@class, 'ant-message-notice-error')]")));
+
+        assertTrue(errorMessage.isDisplayed(), "Error message is not visible");
+        assertEquals(expected, errorMessage.getText(), "Error message text should be " + expected);
+        assertLoginHeader();
+        isTestSuccessful = true;
+    }
+
+    private void clickRestoreLink() {
+        WebElement restoreLink = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@class='restore-password-button']")));
+        assertVisible(restoreLink, "Restore link");
+        assertTrue(restoreLink.isEnabled(), "Restore link is not enabled");
+        clickElementWithJS(restoreLink);
+    }
+
     private static WebElement getLoginButton() {
         WebElement loginButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(LOGIN_BUTTON_XPATH)));
         assertVisible(loginButton, "Login button");
         assertTrue(loginButton.isEnabled(), "Login button should be enabled after filling all fields");
         assertFalse(loginButton.getAttribute("class").contains("ant-btn-disabled"), "Login button should be enabled after filling all fields");
         return loginButton;
+    }
+
+    private static void fillAndAssertRestoreField(String email) {
+        WebElement restoreInput = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@id='edit_email']")));
+        assertVisible(restoreInput, "Restore Input");
+        assertTrue(restoreInput.isEnabled(), "Restore Input is not enabled");
+        restoreInput.sendKeys(email);
     }
 
     private WebElement fillAndAssertField(String fieldxpath, String value) {
