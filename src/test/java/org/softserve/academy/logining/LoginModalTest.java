@@ -37,8 +37,6 @@ class LoginModalTest extends BaseTest {
     private static final String MESSAGE_SUCCESS_XPATH = "//div[contains(@class, 'ant-message-notice-content')]";
     private static final String LOGIN_HEADER_XPATH = "//*[@class='login-header']";
     private static final String expectedColorRed = "#ff4d4f";
-    private static final String EMAIL = "nenix55377@hutov.com";
-    private static final String PASSWORD = "Elv3nWay!";
 
 
     @Test
@@ -105,7 +103,7 @@ class LoginModalTest extends BaseTest {
     void testLoginButton() {
         openModalWindow();
 
-        getLoginButton();
+        assertEnable(getLoginButton(), "login Button");
         isTestSuccessful = true;
     }
 
@@ -332,11 +330,6 @@ class LoginModalTest extends BaseTest {
         assertTrue(errorIcon.isDisplayed(), "Error icon is not displayed");
         assertEquals(expectedColorRed, getBorderColor(errorIcon), "Error icon color does not match expected.");
         assertNotNull(errorIcon, "Error icon is not present");
-    }
-
-    private void assertAttributeEquals(String expected, WebElement element, String attribute) {
-        assertVisible(element, "Element with attribute " + attribute);
-        assertEquals(expected, element.getAttribute(attribute), "Attribute should be with value " + expected);
     }
 
     private void assertErrorAuthMessage(String email) {

@@ -2,6 +2,7 @@ package org.softserve.academy.profile;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Order;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
@@ -9,43 +10,102 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.softserve.academy.runner.BaseTest;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ProfileModalTest extends BaseTest {
 
+    @Test
     @Order(1)
-    @DisplayName("1. Test successful login and check profile info")
+    @DisplayName("1. Test check profile header")
+    void testProfileHeader() {
+        loginUser(EMAIL, PASSWORD);
+        openProfile();
+
+        WebElement profileHeader = driver.findElement(By.xpath("//div[@class='content-title']"));
+        assertVisible(profileHeader, "profile Header");
+        assertTextEquals("Мій профіль", profileHeader, "profile Header");
+        isTestSuccessful = true;
+    }
+
+    @Order(2)
+    @DisplayName("2. Test check profile info")
     @ParameterizedTest(name = "User: {3} {2} login with email: {0}, password: {1}")
     @CsvFileSource(resources = "/sign.csv", numLinesToSkip = 1)
-    void testSuccessfulLogin(String email, String password, String lastName, String firstName, String phone) {
-        openModalWindow();
+    void testProfileInfo(String email, String password, String lastName, String firstName, String phone) {
+        loginUser(email, password);
+        openProfile();
 
-        fillAndAssertField(EMAIL_INPUT_XPATH, email);
-        fillAndAssertField(PASSWORD_INPUT_XPATH, password);
+        WebElement phoneElement = driver.findElement(By.xpath("//div[@class='user-phone-data']"));
+        WebElement emailElement = driver.findElement(By.xpath("//div[@class='user-email-data']"));
+        WebElement fullNameElement = driver.findElement(By.xpath("//div[@class='user-name']"));
 
-        clickElementWithJS(getLoginButton());
-
-        WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(MESSAGE_SUCCESS_SELECTOR)));
-        assertVisible(successMessage, "Success message");
-
-        WebElement dropdownMenu = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='ant-dropdown-trigger user-profile']")));
-        assertEnable(dropdownMenu, "After clicking the user icon Dropdown menu");
-        dropdownMenu.click();
-
-        WebElement profile = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Особистий кабінет')]")));
-        assertEnable(profile, "After clicking the user Profile menu");
-        clickElementWithJS(profile);
-
-        WebElement emailElement = driver.findElement(By.cssSelector(".user-email-data"));
-        WebElement phoneElement = driver.findElement(By.cssSelector(".user-phone-data"));
-        WebElement fullNameElement = driver.findElement(By.cssSelector(".user-name"));
-
-        assertTextEquals(email, emailElement, "After clicking the user profile Email");
         assertVisible(phoneElement, "Phone after clicking the user profile");
-        assertTrue(phoneElement.getText().contains(phone), "Phone does not match the " + lastName);
+        assertVisible(emailElement, "Email after clicking the user profile");
         assertVisible(fullNameElement, "Fullname after clicking the user profile");
+        assertTextEquals(email, emailElement, "After clicking the user profile Email");
+        assertTrue(phoneElement.getText().contains(phone), "Phone does not match the " + lastName);
         assertTrue(fullNameElement.getText().contains(lastName), "Fullname does not match the " + lastName);
         assertTrue(fullNameElement.getText().contains(firstName), "Fullname does not match the " + firstName);
         isTestSuccessful = true;
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("3. Test edit profile button")
+    void testEditProfileButton() {
+        loginUser(EMAIL, PASSWORD);
+        openProfile();
+
+        WebElement editButton = driver.findElement(By.xpath("//div[@class='edit-button']"));
+        assertVisible(editButton, "Edit user profile");
+        assertEnable(editButton, "Edit user profile");
+        assertTextEquals("Редагувати профіль", editButton, "Edit user profile text");
+        isTestSuccessful = true;
+    }
+
+    @Order(4)
+    @ParameterizedTest(name = "User: {3} {2} login with email: {0}, password: {1}")
+    @CsvFileSource(resources = "/sign.csv", numLinesToSkip = 1)
+    @DisplayName("4. Test edit profile modal")
+    void testEditProfileModal(String email, String password, String lastName, String firstName, String phone) {
+        loginUser(email, password);
+        openProfile();
+        WebElement editButton = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='edit-button']")));
+        editButton.click();
+        WebElement editHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='edit-header']")));
+        assertTextEquals("Редагувати профіль", editHeader, "Edit user profile text");
+
+        WebElement lastNameInput = driver.findElement(By.xpath("//input[@id='edit_lastName']"));
+        assertVisible(lastNameInput, "Last name input is null");
+        assertTrue(lastNameInput.isEnabled(), "Last name input is not editable");
+        assertAttributeEquals(lastName, lastNameInput, "value");
+
+        WebElement firstNameInput = driver.findElement(By.xpath("//input[@id='edit_firstName']"));
+        assertVisible(firstNameInput, "First name input is null");
+        assertTrue(firstNameInput.isEnabled(), "First name input is not editable");
+        assertAttributeEquals(firstName, firstNameInput, "value");
+
+        WebElement phoneInput = driver.findElement(By.xpath("//input[@id='edit_phone']"));
+        assertVisible(phoneInput, "Phone input is null");
+        assertTrue(phoneInput.isEnabled(), "Phone input is not editable");
+        assertAttributeEquals("38" + phone, phoneInput, "value");
+
+        WebElement emailInput = driver.findElement(By.xpath("//input[@id='edit_email']"));
+        assertVisible(emailInput, "Email input is not visible");
+        assertFalse(emailInput.isEnabled(), "Email input should be readonly");
+        assertAttributeEquals(email, emailInput, "value");
+
+        isTestSuccessful = true;
+    }
+
+    private void openProfile() {
+        WebElement dropdownMenu = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='ant-dropdown-trigger user-profile']")));
+        assertEnable(dropdownMenu, "After clicking the user icon Dropdown menu");
+        dropdownMenu.click();
+        WebElement profile = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Особистий кабінет')]")));
+        assertEnable(profile, "After clicking the user Profile menu");
+        clickElementWithJS(profile);
     }
 }

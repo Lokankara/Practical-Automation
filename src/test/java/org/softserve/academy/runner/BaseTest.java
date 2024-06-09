@@ -41,6 +41,8 @@ public abstract class BaseTest {
     protected static final String PASSWORD_INPUT_XPATH = "//*[@id='basic_password']";
     protected static final String MESSAGE_SUCCESS_SELECTOR = ".ant-message-success";
     protected static final String EMAIL_INPUT_XPATH = "//*[@id='basic_email']";
+    protected static final String EMAIL = "nenix55377@hutov.com";
+    protected static final String PASSWORD = "Elv3nWay!";
     private static final String GRAND_COURSE = "IT освіта: курси \"ГРАНД\"";
     private static final String LEAVE_COMMENT_MESSAGE = "Leave Comment Button";
     private static final String EXPECTED_COMMENT_HEADER = "Залишити коментар";
@@ -103,6 +105,9 @@ public abstract class BaseTest {
         openModalWindow();
         fillAndAssertField(EMAIL_INPUT_XPATH, email);
         fillAndAssertField(PASSWORD_INPUT_XPATH, password);
+
+        clickElementWithJS(getLoginButton());
+
         WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(MESSAGE_SUCCESS_SELECTOR)));
         assertVisible(successMessage, "Success message");
     }
@@ -138,6 +143,11 @@ public abstract class BaseTest {
         assertTrue(loginButton.isEnabled(), "Login button should be enabled after filling all fields");
         assertFalse(loginButton.getAttribute("class").contains("ant-btn-disabled"), "Login button should be enabled after filling all fields");
         return loginButton;
+    }
+
+    protected void assertAttributeEquals(String expected, WebElement element, String attribute) {
+        assertVisible(element, "Element with attribute " + attribute);
+        assertEquals(expected, element.getAttribute(attribute), "Attribute should be with value " + expected);
     }
 
     protected void assertEnable(WebElement element, String message) {
