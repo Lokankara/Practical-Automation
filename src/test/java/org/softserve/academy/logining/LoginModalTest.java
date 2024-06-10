@@ -14,7 +14,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.softserve.academy.provider.InvalidEmailProvider;
-import org.softserve.academy.provider.ProvideLoginArguments;
+import org.softserve.academy.provider.LoginProvider;
 import org.softserve.academy.provider.ValidEmailProvider;
 import org.softserve.academy.runner.BaseTest;
 
@@ -37,7 +37,6 @@ class LoginModalTest extends BaseTest {
     private static final String MESSAGE_SUCCESS_XPATH = "//div[contains(@class, 'ant-message-notice-content')]";
     private static final String LOGIN_HEADER_XPATH = "//*[@class='login-header']";
     private static final String expectedColorRed = "#ff4d4f";
-
 
     @Test
     @Order(1)
@@ -260,7 +259,7 @@ class LoginModalTest extends BaseTest {
     @Order(10)
     @DisplayName("10. Test login with Error unAuthorized user")
     @ParameterizedTest(name = "Test login with unAuthorized user : email {0}")
-    @ArgumentsSource(ProvideLoginArguments.class)
+    @ArgumentsSource(LoginProvider.class)
     void testLoginWithUnAuthorizedUser(String email, String password) {
         openModalWindow();
         fillAndAssertField(EMAIL_INPUT_XPATH, email);

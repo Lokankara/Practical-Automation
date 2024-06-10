@@ -8,14 +8,14 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.softserve.academy.runner.BaseTest;
+import org.softserve.academy.runner.ProfileBaseTest;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class ProfileModalTest extends BaseTest {
+class ProfileModalTest extends ProfileBaseTest {
 
     @Test
     @Order(1)
@@ -78,13 +78,12 @@ class ProfileModalTest extends BaseTest {
         WebElement lastNameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='edit_lastName']")));
         assertVisible(lastNameInput, "Last name input is null");
         assertTrue(lastNameInput.isEnabled(), "Last name input is not editable");
-//        assertAttributeEquals(lastName, lastNameInput, "value");
-        System.out.println(lastNameInput.getAttribute("value"));
+        assertAttributeEquals(lastName, lastNameInput, "value");
 
         WebElement firstNameInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='edit_firstName']")));
         assertVisible(firstNameInput, "First name input is null");
         assertTrue(firstNameInput.isEnabled(), "First name input is not editable");
-//        assertAttributeEquals(firstName, firstNameInput, "value");
+        assertAttributeEquals(firstName, firstNameInput, "value");
 
         WebElement phoneInput = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='edit_phone']")));
         assertVisible(phoneInput, "Phone input is null");
@@ -128,22 +127,5 @@ class ProfileModalTest extends BaseTest {
 
         assertTrue(elements.isEmpty(), "The list of elements is empty.");
         isTestSuccessful = true;
-    }
-
-    private void clickEditProfile() {
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='edit-button']"))).click();
-        WebElement editTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='menu-title']")));
-        assertTextEquals("Особистий кабінет", editTitle, "edit Title user profile text");
-        WebElement editHeader = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='content-title']")));
-        assertTextEquals("Мій профіль", editHeader, "Edit user profile text");
-    }
-
-    private void openProfile() {
-        WebElement dropdownMenu = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='ant-dropdown-trigger user-profile']")));
-        assertEnable(dropdownMenu, "After clicking the user icon Dropdown menu");
-        dropdownMenu.click();
-        WebElement profile = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Особистий кабінет')]")));
-        assertEnable(profile, "After clicking the user Profile menu");
-        clickElementWithJS(profile);
     }
 }

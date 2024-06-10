@@ -41,8 +41,8 @@ public abstract class BaseTest {
     protected static final String PASSWORD_INPUT_XPATH = "//*[@id='basic_password']";
     protected static final String MESSAGE_SUCCESS_SELECTOR = ".ant-message-success";
     protected static final String EMAIL_INPUT_XPATH = "//*[@id='basic_email']";
-    protected static final String EMAIL = "nenix55377@hutov.com";
-    protected static final String PASSWORD = "Elv3nWay!";
+    protected static final String EMAIL = "lijoyiv225@hutov.com";
+    protected static final String PASSWORD = "Gard3ner#";
     private static final String GRAND_COURSE = "IT освіта: курси \"ГРАНД\"";
     private static final String LEAVE_COMMENT_MESSAGE = "Leave Comment Button";
     private static final String EXPECTED_COMMENT_HEADER = "Залишити коментар";
@@ -64,7 +64,7 @@ public abstract class BaseTest {
         driver.manage().deleteAllCookies();
         if (!isTestSuccessful) {
             takeShot();
-            System.err.println(testInfo.getDisplayName());
+            System.out.println(testInfo.getDisplayName());
         }
     }
 
@@ -98,6 +98,7 @@ public abstract class BaseTest {
             }
         } catch (Exception e) {
             System.err.println(e.getMessage());
+            Assertions.fail("Setup failed: " + e.getMessage());
         }
     }
 
@@ -193,6 +194,7 @@ public abstract class BaseTest {
             FileUtils.copyFile(scrFile, new File(pathName));
         } catch (IOException e) {
             System.err.println(e.getMessage());
+            Assertions.fail("Setup failed: " + e.getMessage());
         }
     }
 }

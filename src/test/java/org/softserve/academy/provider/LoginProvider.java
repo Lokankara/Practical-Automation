@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class ProvideLoginArguments implements ArgumentsProvider {
+public class LoginProvider implements ArgumentsProvider {
 
     @Override
     public Stream<Arguments> provideArguments(ExtensionContext context) {
