@@ -34,7 +34,6 @@ public class ValidEmailProvider
                 Arguments.of("firstname.lastname@google.com"),
                 Arguments.of("another.valid.email@google.co.uk"),
                 Arguments.of("email.email.email.email.emails@google.name"),
-                // Valid emails
                 Arguments.of("valid.email@google.com"),
                 Arguments.of("john.doe123@google.co.uk"),
                 Arguments.of("user12345@google.com"),

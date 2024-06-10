@@ -33,24 +33,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public abstract class BaseTest {
 
     protected static final String BASE_URL = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev";
-    private static final String TIME_TEMPLATE = "yyyy-MM-dd_HH-mm-ss-S";
+    protected static final String SUCCESS_LOGIN_MESSAGE = "//div[contains(@class, 'ant-message-success')]";
     protected static final String DROPDOWN_MENU_XPATH = "//ul[contains(@class, 'ant-dropdown-menu')]";
     private static final String LOGIN_MENU_ITEM_XPATH = "//li[@role='menuitem']//div[text()='Увійти']";
     private static final String LOGIN_BUTTON_XPATH = "//button[contains(@class, 'login-button')]";
     protected static final String USER_ICON_XPATH = "//*[name()='svg'][@data-icon='user']";
     protected static final String PASSWORD_INPUT_XPATH = "//*[@id='basic_password']";
-    protected static final String MESSAGE_SUCCESS_SELECTOR = ".ant-message-success";
     protected static final String EMAIL_INPUT_XPATH = "//*[@id='basic_email']";
+    private static final String TIME_TEMPLATE = "yyyy-MM-dd_HH-mm-ss-S";
     protected static final String EMAIL = "lijoyiv225@hutov.com";
     protected static final String PASSWORD = "Gard3ner#";
-    private static final String GRAND_COURSE = "IT освіта: курси \"ГРАНД\"";
-    private static final String LEAVE_COMMENT_MESSAGE = "Leave Comment Button";
-    private static final String EXPECTED_COMMENT_HEADER = "Залишити коментар";
-
-    protected static WebDriver driver;
-    protected static WebDriverWait wait;
     protected static JavascriptExecutor executor;
     protected static boolean isTestSuccessful;
+    protected static WebDriverWait wait;
+    protected static WebDriver driver;
 
     @BeforeEach
     void setUpEach() {
@@ -64,7 +60,7 @@ public abstract class BaseTest {
         driver.manage().deleteAllCookies();
         if (!isTestSuccessful) {
             takeShot();
-            System.out.println(testInfo.getDisplayName());
+            System.err.println(testInfo.getDisplayName());
         }
     }
 
@@ -109,7 +105,7 @@ public abstract class BaseTest {
 
         clickElementWithJS(getLoginButton());
 
-        WebElement successMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(MESSAGE_SUCCESS_SELECTOR)));
+        WebElement successMessage = getVisibleElement(By.xpath(SUCCESS_LOGIN_MESSAGE));
         assertVisible(successMessage, "Success message");
     }
 
@@ -134,17 +130,23 @@ public abstract class BaseTest {
     }
 
     private WebElement findElementContainingText() {
-        JavascriptExecutor js = (JavascriptExecutor) driver;
         String script = "return Array.from(document.querySelectorAll(\"li[role='menuitem'] div\")).find(element => element.textContent.includes(\"Увійти\"));";
-        return (WebElement) js.executeScript(script);
+        return (WebElement) executor.executeScript(script);
     }
 
-    protected WebElement getWebElement(By locator) {
+    protected WebElement getElementByXpath(String xpath) {
+        return driver.findElement(By.xpath(xpath));
+    }
+
+    protected WebElement getVisibleElement(By locator) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+    }
+    protected WebElement getClickableElement(By locator) {
+        return wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
     protected WebElement getLoginButton() {
-        WebElement loginButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(LOGIN_BUTTON_XPATH)));
+        WebElement loginButton = getVisibleElement(By.xpath(LOGIN_BUTTON_XPATH));
         assertVisible(loginButton, "Login button");
         assertTrue(loginButton.isEnabled(), "Login button should be enabled after filling all fields");
         assertFalse(loginButton.getAttribute("class").contains("ant-btn-disabled"), "Login button should be enabled after filling all fields");
@@ -174,6 +176,11 @@ public abstract class BaseTest {
     protected void assertTextEquals(String expected, WebElement element, String message) {
         assertTextPresent(element, message);
         assertEquals(expected, element.getText(), String.format("%s text should match %s", message, expected));
+    }
+
+    protected void assertContains(WebElement element, String xpath, String expectedText) {
+        assertVisible(element, String.format("Element with XPath %s is not visible.", xpath));
+        assertTrue(element.getText().contains(expectedText),  String.format("Text does not match for element with %s and %s ", expectedText, element.getText()));
     }
 
     protected void clickElementWithJS(WebElement element) {

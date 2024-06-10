@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestMethodOrder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.softserve.academy.runner.BaseTest;
+import org.softserve.academy.runner.ClubsBaseTest;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -16,10 +16,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @DisplayName("Clubs Page Tests")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
-class ClubsPageTest extends BaseTest {
+class ClubsPageTest extends ClubsBaseTest {
 
-    private static final String CLUBS_MENU_ITEM_CSS = "span.ant-menu-title-content a[href='/dev/clubs']";
     private static final String SECOND_PAGE_LINK_CSS = "li[class$='ant-pagination-item-2'] a[rel='nofollow']";
+    private static final String CLUBS_MENU_ITEM_CSS = "span.ant-menu-title-content a[href='/dev/clubs']";
     private static final String LOGO_SELECTOR_CSS = ".left-side-menu .logo";
 
     @Test
@@ -32,7 +32,6 @@ class ClubsPageTest extends BaseTest {
         assertEquals(expectedUrl, driver.getCurrentUrl(), "URL should be the clubs page URL");
         isTestSuccessful = true;
     }
-
 
     @Test
     @DisplayName("Test navigating to second page")
@@ -66,20 +65,20 @@ class ClubsPageTest extends BaseTest {
     @Test
     @DisplayName("Test finding the logo in the left-side menu")
     void testFindLogoInLeftSideMenu() {
-        WebElement logo = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector(LOGO_SELECTOR_CSS)));
+        WebElement logo = getVisibleElement(By.cssSelector(LOGO_SELECTOR_CSS));
         assertTrue(logo.isDisplayed(), "Logo should be visible in the left-side menu");
         isTestSuccessful = true;
     }
 
     private void openSecondPage() {
         openTabClubs();
-        WebElement secondPage = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(SECOND_PAGE_LINK_CSS)));
+        WebElement secondPage = getClickableElement(By.cssSelector(SECOND_PAGE_LINK_CSS));
         scrollToElement(secondPage);
         clickElementWithJS(secondPage);
     }
 
     private void openTabClubs() {
-        WebElement clubsMenuItem = wait.until(ExpectedConditions.elementToBeClickable(By.cssSelector(CLUBS_MENU_ITEM_CSS)));
+        WebElement clubsMenuItem = getClickableElement(By.cssSelector(CLUBS_MENU_ITEM_CSS));
         scrollToElement(clubsMenuItem);
         clickElementWithJS(clubsMenuItem);
     }
