@@ -33,6 +33,21 @@ class ChangePasswordTest extends ProfileBaseTest {
         isTestSuccessful = true;
     }
 
+    @Test
+    void testChangeWrongCurrentPassword() {
+        loginUser(EMAIL, PASSWORD);
+        openProfile();
+        clickEditProfile();
+        clickElementWithJS(wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//input[@name='checkbox']"))));
+
+        fillPasswordInputs("TestPassword123!", "NewPassword123!", "NewPassword123!");
+        clickElementWithJS(driver.findElement(By.xpath("//span[contains(text(),'Зберегти зміни')]")));
+
+        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//span[contains(text(),'Введено невірний пароль')]")));
+        assertEquals("Введено невірний пароль", errorMessage.getText());
+        isTestSuccessful = true;
+    }
+
     @ParameterizedTest(name = "Test change Current Password: {0} newPassword: {1}, confirmPassword: {2}")
     @ArgumentsSource(PasswordProvider.class)
     void testPasswordChange(String currentPassword, String newPassword, String confirmPassword, List<String> xpaths, List<String> expectedMessages) {
@@ -45,46 +60,6 @@ class ChangePasswordTest extends ProfileBaseTest {
                 wait.until(ExpectedConditions.visibilityOfElementLocated(
                         By.xpath(xpaths.get(i)))).getText()));
     }
-
-    @Test
-    void testEmptyPasswordsParams() {
-        openChangePassword();
-//        fillPasswordInputs("Gard3ner#", "Password123", "Password123");
-//        clickElementWithJS(driver.findElement(By.xpath("//span[contains(text(),'Зберегти зміни')]")));
-//        checks();
-        isTestSuccessful = true;
-    }
-
-    private void checks() {
-        List<WebElement> errorMessages = driver.findElements(By.xpath("//div[contains(@class, 'ant-form-item-explain-error')]"));
-        try {
-            WebElement currentPasswordHelp = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='edit_currentPassword_help']//div[1]")));
-            assertEquals("Введіть старий пароль", currentPasswordHelp.getText(), "Incorrect error message text");
-            System.out.println(currentPasswordHelp.getText());
-            System.out.println("1");
-        } catch (RuntimeException e){}
-        try {
-            WebElement newPasswordHelp1 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='edit_password_help']//div[1]")));
-            assertEquals("Будь ласка, введіть новий пароль", newPasswordHelp1.getText(), "Incorrect error message text");
-            System.out.println(newPasswordHelp1.getText());
-            System.out.println("2");
-        } catch (RuntimeException e){}
-        try {
-            WebElement newPasswordHelp2 = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='edit_password_help']//div[2]")));
-            assertEquals("Значення поля ‘Новий пароль’ має відрізнятися від значення поля ‘Старий пароль’", newPasswordHelp2.getText(), "Incorrect error message text");
-            System.out.println(newPasswordHelp2.getText());
-            System.out.println("3");
-        } catch (RuntimeException e){}
-        try {
-            WebElement confirmPasswordHelp = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@id='edit_confirmPassword_help']//div[1]")));
-            assertEquals("'Значення поля ‘Підтвердити новий пароль’ має бути еквівалентним значенню поля ‘Новий пароль’", confirmPasswordHelp.getText(), "Incorrect error message text");
-            System.out.println(confirmPasswordHelp.getText());
-            System.out.println("4");
-        } catch (RuntimeException e){}
-
-        System.out.println(errorMessages.size());
-    }
-
 
     private static void fillPasswordInputs(String currentPassword, String newPassword, String confirmPassword) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='edit_currentPassword']"))).sendKeys(currentPassword);
