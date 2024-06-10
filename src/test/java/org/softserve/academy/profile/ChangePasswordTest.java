@@ -33,14 +33,15 @@ class ChangePasswordTest extends ProfileBaseTest {
         isTestSuccessful = true;
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "Test change Current Password: {0} newPassword: {1}, confirmPassword: {2}")
     @ArgumentsSource(PasswordProvider.class)
     void testPasswordChange(String currentPassword, String newPassword, String confirmPassword, List<String> xpaths, List<String> expectedMessages) {
         openChangePassword();
 
         fillPasswordInputs(currentPassword, newPassword, confirmPassword);
         clickElementWithJS(driver.findElement(By.xpath("//span[contains(text(),'Зберегти зміни')]")));
-
+        List<WebElement> errorMessages = driver.findElements(By.xpath("//div[contains(@class, 'ant-form-item-explain-error')]"));
+        System.out.println(errorMessages.size() + " " + currentPassword);
         IntStream.range(0, xpaths.size()).forEach(
                 i -> assertEquals(expectedMessages.get(i),
                 wait.until(ExpectedConditions.visibilityOfElementLocated(

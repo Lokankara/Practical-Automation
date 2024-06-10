@@ -46,7 +46,7 @@ class ProfileModalTest extends ProfileBaseTest {
         assertVisible(emailElement, "Email after clicking the user profile");
         assertVisible(fullNameElement, "Fullname after clicking the user profile");
         assertTextEquals(email, emailElement, "After clicking the user profile Email");
-        assertTrue(phoneElement.getText().contains(phone), "Phone does not match the " + lastName);
+        assertTrue(phoneElement.getText().contains(phone), "Phone does not match the " + phone);
         assertTrue(fullNameElement.getText().contains(lastName), "Fullname does not match the " + lastName);
         assertTrue(fullNameElement.getText().contains(firstName), "Fullname does not match the " + firstName);
         isTestSuccessful = true;
