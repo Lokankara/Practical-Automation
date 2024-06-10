@@ -128,6 +128,7 @@ public abstract class BaseTest {
     protected WebElement fillAndAssertField(String fieldxpath, String value) {
         WebElement field = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(fieldxpath)));
         assertNotNull(field, "Field with XPath '" + fieldxpath + "' should be present");
+        field.clear();
         field.sendKeys(value);
         return field;
     }
@@ -136,6 +137,10 @@ public abstract class BaseTest {
         JavascriptExecutor js = (JavascriptExecutor) driver;
         String script = "return Array.from(document.querySelectorAll(\"li[role='menuitem'] div\")).find(element => element.textContent.includes(\"Увійти\"));";
         return (WebElement) js.executeScript(script);
+    }
+
+    protected WebElement getWebElement(By locator) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
     protected WebElement getLoginButton() {

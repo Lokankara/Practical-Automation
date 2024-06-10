@@ -5,7 +5,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 public abstract class ProfileBaseTest extends BaseTest {
-    protected void clickEditProfile() {
+    protected void openEditProfile() {
         wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//div[@class='edit-button']"))).click();
         WebElement editTitle = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[@class='menu-title']")));
         assertTextEquals("Особистий кабінет", editTitle, "edit Title user profile text");
@@ -20,5 +20,9 @@ public abstract class ProfileBaseTest extends BaseTest {
         WebElement profile = wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Особистий кабінет')]")));
         assertEnable(profile, "After clicking the user Profile menu");
         clickElementWithJS(profile);
+    }
+
+    protected void clickCheckBox() {
+        clickElementWithJS(wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//input[@name='checkbox']"))));
     }
 }

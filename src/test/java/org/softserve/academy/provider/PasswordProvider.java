@@ -31,12 +31,8 @@ public class PasswordProvider implements ArgumentsProvider {
                 Arguments.of(CURRENT, "VeryLongPasswordThatExceeds20Characters", "VeryLongPasswordThatExceeds20Characters", List.of(xpaths.get(1)), List.of(errorMessages.get(5))),
                 Arguments.of(CURRENT, NEW_PASSWORD, WRONG_PASSWORD, List.of(xpaths.get(3)), List.of(errorMessages.get(6))));
 
-//                Arguments.of("Gard3ner#", "password123!", "password123!", //caps
-//                        List.of(xpaths.get(1)),
-//                        List.of(errorMessages.get(5))),
-//                Arguments.of("Gard3ner#", "PASSWORD123!", "PASSWORD123!", //lower
-//                        List.of(xpaths.get(1)),
-//                        List.of(errorMessages.get(5))),
+//                Arguments.of("Gard3ner#", "password123!", "password123!", List.of(xpaths.get(1)), List.of(errorMessages.get(5))),
+//                Arguments.of("Gard3ner#", "PASSWORD123!", "PASSWORD123!", List.of(xpaths.get(1)), List.of(errorMessages.get(5))),
     }
     String CURRENT = "Gard3ner#";
     String NEW_PASSWORD = "NewPassword123!";
