@@ -106,7 +106,7 @@ class ProfileModalTest extends ProfileBaseTest {
         openProfile();
         clickEditProfile();
 
-        WebElement checkbox = driver.findElement(By.xpath(".//input[@name='checkbox']"));
+        WebElement checkbox = wait.until(ExpectedConditions.elementToBeClickable(By.xpath(".//input[@name='checkbox']")));
         List<WebElement> elements = driver.findElements(By.xpath("//*[contains(@class, 'ant-input-affix-wrapper') and contains(@class, 'ant-input-password') and contains(@class, 'user-edit-box')]"));
         clickElementWithJS(checkbox);
 
