@@ -1,4 +1,0 @@
-email,password,isErrorMessageExpected,assertionMessage
-test@gmail.ua,WrongPass!,true,Пароль повинен містити хоча б одну цифру
-test@gmail.com,Shot!2,true,Пароль не може бути коротшим
-test@gmail.com,wrongPass1!,true,Пароль повинен містити хоча б одну велику літеру

@@ -2,9 +2,9 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "master", "main" ]
 
 permissions:
   contents: write
@@ -68,4 +68,10 @@ jobs:
           fetch-depth: 0
 
       - name: Run java checkstyle
-        uses: nikitasavinov/checkstyle-action@0.6.0
+        uses: nikitasavinov/checkstyle-action@master
+        with:
+          checkstyle_config: 'checks.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          reporter: 'github-pr-check'
+          tool_name: 'Checkstyle'
+          workdir: 'src/test/java/com/softserve/edu/tests'
