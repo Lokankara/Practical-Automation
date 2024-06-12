@@ -122,7 +122,7 @@ class ChangeProfileTest extends ProfileBaseTest {
         isTestSuccessful = true;
     }
 
-    @ParameterizedTest(name = "Test change User info: {0} {1}, phone: {2}")
+    @ParameterizedTest(name = "{index}: Test change User info: {0} {1}, phone: {2}")
     @ArgumentsSource(InfoUserProvider.class)
     void testUserInfoChange(
             String lastName, String firstName, String phone,
