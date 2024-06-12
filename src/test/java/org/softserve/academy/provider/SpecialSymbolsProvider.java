@@ -16,12 +16,12 @@ public class SpecialSymbolsProvider implements ArgumentsProvider {
             Keys.ALT.charAt(0), Keys.ARROW_LEFT.charAt(0), Keys.ARROW_UP.charAt(0),
             Keys.NULL.charAt(0), Keys.TAB.charAt(0), Keys.END.charAt(0),
             Keys.ESCAPE.charAt(0), Keys.DELETE.charAt(0), Keys.DOWN.charAt(0),
-            Keys.CONTROL.charAt(0), Keys.PAGE_DOWN.charAt(0), Keys.PAUSE.charAt(0)
+            Keys.CONTROL.charAt(0), Keys.PAUSE.charAt(0)
     ));
 
     private static final Set<Character> ALLOWS_CHARACTERS = new HashSet<>(Arrays.asList(
             '~', '@', '#', '?', '<', '>', '^', '?', '.', '%', '&',
-            '*', '_', '-', '$', ' ', '\n', '\\', '\'', '`', '/'
+            '*', '_', '-', '$', ' ', '\n', '\'', '`', '/'
     ));
 
     @Override

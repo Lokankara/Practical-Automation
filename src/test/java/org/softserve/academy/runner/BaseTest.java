@@ -35,7 +35,8 @@ public abstract class BaseTest {
     protected static final String BASE_URL = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev";
     protected static final String SUCCESS_LOGIN_MESSAGE = "//div[contains(@class, 'ant-message-success')]";
     protected static final String DROPDOWN_MENU_XPATH = "//ul[contains(@class, 'ant-dropdown-menu')]";
-    private static final String LOGIN_MENU_ITEM_XPATH = "//li[@role='menuitem']//div[text()='Увійти']";
+    protected static final String SUCCESS_MESSAGE = "//span[contains(text(),'Профіль змінено успішно')]";
+    protected static final String ERROR_MESSAGE = "//span[contains(text(),'Введено невірний пароль')]";
     private static final String LOGIN_BUTTON_XPATH = "//button[contains(@class, 'login-button')]";
     protected static final String USER_ICON_XPATH = "//*[name()='svg'][@data-icon='user']";
     protected static final String PASSWORD_INPUT_XPATH = "//*[@id='basic_password']";

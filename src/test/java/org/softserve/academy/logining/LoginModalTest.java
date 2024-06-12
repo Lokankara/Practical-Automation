@@ -30,7 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class LoginModalTest extends BaseTest {
 
     private static final String EMAIL_ICON_XPATH = "//*[contains(@class, 'anticon') and contains(@class, 'anticon-mail')]/following-sibling::*[contains(@class, 'ant-form-item-feedback-icon') and contains(@class, 'ant-form-item-feedback-icon-error')]";
-    private static final String NOTICE_ERROR_XPATH = "//*[contains(concat(' ', normalize-space(@class), ' '), ' ant-message-notice ') and contains(concat(' ', normalize-space(@class), ' '), ' ant-message-notice-error ')]";
+    private static final String NOTICE_ERROR_XPATH = "//div[contains(@class, 'ant-message-notice-error')]";
     private static final String ERROR_ICON_XPATH = "//*[contains(@class, 'ant-form-item-feedback-icon')][contains(@class, 'ant-form-item-feedback-icon-error')]";
     private static final String PROFILE_MENU_XPATH = "//li[contains(@class, 'ant-dropdown-menu-item-only-child') and contains(@data-menu-id, '-profile')]";
     private static final String DROPDOWN_MENU_PROFILE_XPATH = "//*[@class='ant-dropdown-trigger user-profile']";
@@ -228,10 +228,6 @@ class LoginModalTest extends BaseTest {
 
         clickElementWithJS(getLoginButton());
         WebElement emailIcon = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(ERROR_ICON_XPATH)));
-
-//        WebElement errorMessage = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//*[contains(@class, 'ant-message-error')]")));
-//        assertEquals(isErrorMessageExpected, errorMessage.isDisplayed(), assertionMessage);
-
         assertLoginHeader();
         checkErrorIconClass(emailIcon);
         isTestSuccessful = true;

@@ -117,14 +117,14 @@ class ProfileModalTest extends ProfileBaseTest {
         clickCheckBox();
 
         driver.findElements(By.xpath(EDIT_INPUTS)).forEach(element ->
-                assertTrue(element.isDisplayed(), "The element is not displayed."));
+                assertTrue(element.isDisplayed(), "The element should be displayed."));
 
         inputPasswordXPaths.forEach(inputXPath ->
                 assertEnable(getVisibleElement(By.xpath(inputXPath)), "Element with " + inputXPath));
 
         clickCheckBox();
 
-        assertTrue(driver.findElements(By.xpath(EDIT_INPUTS)).isEmpty(), "The list of elements is empty.");
+        assertTrue(driver.findElements(By.xpath(EDIT_INPUTS)).isEmpty(), "The list of elements should be empty.");
         isTestSuccessful = true;
     }
 }

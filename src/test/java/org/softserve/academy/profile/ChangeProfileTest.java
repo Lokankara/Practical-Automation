@@ -8,10 +8,10 @@ import org.junit.jupiter.params.provider.CsvFileSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
+import org.softserve.academy.provider.InValidProfileUserProvider;
 import org.softserve.academy.provider.InfoUserProvider;
-import org.softserve.academy.provider.LoginProvider;
 import org.softserve.academy.provider.PasswordProvider;
-import org.softserve.academy.provider.ProfileUserProvider;
+import org.softserve.academy.provider.ValidProfileUserProvider;
 import org.softserve.academy.runner.ProfileBaseTest;
 
 import java.util.Arrays;
@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.softserve.academy.provider.UserInfoData.NEW_PASSWORD;
+import static org.softserve.academy.provider.UserInfoData.WRONG_PASSWORD;
 
 class ChangeProfileTest extends ProfileBaseTest {
 
@@ -51,8 +53,9 @@ class ChangeProfileTest extends ProfileBaseTest {
 
     @DisplayName("3. Test Success User Info Change With Password")
     @ParameterizedTest(name = "Test Success User {4} {3} with password {0}")
-    @ArgumentsSource(ProfileUserProvider.class)
-    void testUserInfoSuccessChangeWithPassword(String current, String newPass, String confirm, String lastName, String firstName, String phone) {
+    @ArgumentsSource(ValidProfileUserProvider.class)
+    void testUserInfoSuccessChangeWithPassword(
+            String current, String newPass, String confirm, String lastName, String firstName, String phone) {
         loginUser(EMAIL, current);
         openProfile();
         openEditProfile();
@@ -66,22 +69,64 @@ class ChangeProfileTest extends ProfileBaseTest {
     }
 
     @Test
+    @DisplayName("5. Test Change profile with wrong current password")
     void testChangeWrongCurrentPassword() {
-        final String password = "NewPassword123!";
         loginUser(EMAIL, PASSWORD);
         openProfile();
         openEditProfile();
         clickCheckBox();
-        fillPasswordInputs("TestPassword123!", password, password);
+        fillPasswordInputs(WRONG_PASSWORD, NEW_PASSWORD, NEW_PASSWORD);
         saveChanges();
 
         assertErrorMessage();
         isTestSuccessful = true;
     }
 
-    @ParameterizedTest(name = "Test change Current lastName: {0} firstName: {1}, phone: {2}")
+    @DisplayName("5. Test Change profile with special symbols")
+    @CsvFileSource(resources = "/invalid-passwords.csv", numLinesToSkip = 1)
+    @ParameterizedTest(name = "5. Test Change profile with special symbol: {0}")
+    void testChangeProfileWithSpecialSymbol(String password) {
+        final String expected = "Пароль повинен містити великі/маленькі літери латинського алфавіту, цифри та спеціальні символи";
+        loginUser(EMAIL, PASSWORD);
+        openProfile();
+        openEditProfile();
+        clickCheckBox();
+
+        fillPasswordInputs(PASSWORD, password, password);
+        saveChanges();
+
+        assertEquals(expected, getVisibleElement(By.xpath("//div[@id='edit_password_help']")).getText(),
+                String.format("Error messages retrieved from edit password: %s help does not match expected", password));
+        isTestSuccessful = true;
+    }
+
+    @ParameterizedTest(name = "{index}: {0}, {1}, {2}, {3}, {4}, {5}")
+    @DisplayName("6. Test unsuccessful change with invalid values")
+    @ArgumentsSource(InValidProfileUserProvider.class)
+    void testUnSuccessfulChangeWithInValidValue(
+            String lastName, String firstName, String phone, String current, String newPass,
+            String confirm, List<String> expectedMessages, List<String> xPaths) {
+
+        loginUser(EMAIL, PASSWORD);
+        openProfile();
+        openEditProfile();
+        clickCheckBox();
+        updateUserInfo(lastName, firstName, phone);
+        fillPasswordInputs(current, newPass, confirm);
+        saveChanges();
+
+        IntStream.range(0, xPaths.size()).forEach(i ->
+                assertEquals(expectedMessages.get(i), getVisibleElement(By.xpath(xPaths.get(i))).getText(),
+                        "Error messages from element do not match expected by xpath: " + xPaths.get(i)));
+
+        isTestSuccessful = true;
+    }
+
+    @ParameterizedTest(name = "Test change User info: {0} {1}, phone: {2}")
     @ArgumentsSource(InfoUserProvider.class)
-    void testUserInfoChange(String lastName, String firstName, String phone, List<String> xPaths, List<String> expectedMessages) {
+    void testUserInfoChange(
+            String lastName, String firstName, String phone,
+            List<String> xPaths, List<String> expectedMessages) {
         loginUser(EMAIL, PASSWORD);
         openChangePassword();
 
@@ -89,12 +134,16 @@ class ChangeProfileTest extends ProfileBaseTest {
         saveChanges();
 
         IntStream.range(0, xPaths.size()).forEach(i ->
-                assertEquals(expectedMessages.get(i), getVisibleElement(By.xpath(xPaths.get(i))).getText()));
+                assertEquals(expectedMessages.get(i),
+                        getVisibleElement(By.xpath(xPaths.get(i))).getText(),
+                        "Error messages from element does not match expected"));
     }
 
-    @ParameterizedTest(name = "Test change Current Password: {0} newPassword: {1}, confirmPassword: {2}")
+    @ParameterizedTest(name = "Test change info Current password: {0} newPassword: {1}, confirmPassword: {2}")
     @ArgumentsSource(PasswordProvider.class)
-    void testPasswordChange(String currentPassword, String newPassword, String confirmPassword, List<String> xPaths, List<String> expectedMessages) {
+    void testPasswordChange(
+            String currentPassword, String newPassword, String confirmPassword,
+            List<String> xPaths, List<String> expectedMessages) {
         loginUser(EMAIL, PASSWORD);
         openChangePassword();
         clickCheckBox();
@@ -102,7 +151,9 @@ class ChangeProfileTest extends ProfileBaseTest {
         saveChanges();
 
         IntStream.range(0, xPaths.size()).forEach(i ->
-                assertEquals(expectedMessages.get(i), getVisibleElement(By.xpath(xPaths.get(i))).getText()));
+                assertEquals(expectedMessages.get(i),
+                        getVisibleElement(By.xpath(xPaths.get(i))).getText(),
+                        String.format("Error messages from label for password: %s do not match expected by xpath %s", currentPassword, xPaths.get(i))));
     }
 
     private void fillUserInput(WebElement element, String value) {
@@ -110,7 +161,8 @@ class ChangeProfileTest extends ProfileBaseTest {
         element.sendKeys(value);
     }
 
-    private void fillPasswordInputs(String currentPassword, String newPassword, String confirmPassword) {
+    private void fillPasswordInputs(
+            String currentPassword, String newPassword, String confirmPassword) {
         List<String> values = Arrays.asList(currentPassword, newPassword, confirmPassword);
         IntStream.range(0, inputPasswordXPaths.size()).forEach(i ->
                 getVisibleElement(By.xpath(inputPasswordXPaths.get(i))).sendKeys(values.get(i)));

@@ -15,8 +15,6 @@ public abstract class ProfileBaseTest extends BaseTest {
     protected static final String[] inputUserXPaths = {"//input[@id='edit_lastName']", "//input[@id='edit_firstName']", "//input[@id='edit_phone']", "//input[@id='edit_email']"};
     protected static final String EDIT_INPUTS = "//*[contains(@class, 'ant-input-affix-wrapper') and contains(@class, 'ant-input-password') and contains(@class, 'user-edit-box')]";
     protected static final String DROPDOWN_USER_PROFILE = "//div[@class='ant-dropdown-trigger user-profile']";
-    protected static final String SUCCESS_MESSAGE = "//span[contains(text(),'Профіль змінено успішно')]";
-    protected static final String ERROR_MESSAGE = "//span[contains(text(),'Введено невірний пароль')]";
     protected static final String BOX_INPUT = "//span[contains(@class, 'user-edit-box')]//input";
     protected static final String SAVE_CHANGE = "//span[contains(text(),'Зберегти зміни')]";
     protected static final String CABINET = "//a[contains(text(),'Особистий кабінет')]";
