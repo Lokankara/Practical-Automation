@@ -1,7 +1,8 @@
 package com.softserve.edu.driver;
 
-import com.softserve.edu.manger.DriverFactoryBuilder;
+import com.softserve.edu.manager.DriverFactoryBuilder;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -29,7 +30,7 @@ public class RemoteDriverFactory extends AbstractDriverFactory {
     }
 
     @Override
-    public Capabilities getCapabilities() {
+    public MutableCapabilities getCapabilities() {
         return DriverFactoryBuilder.getFactory(browser).setHeadless(headless).getCapabilities();
     }
 }

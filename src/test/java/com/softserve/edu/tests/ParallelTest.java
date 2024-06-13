@@ -1,8 +1,15 @@
 package com.softserve.edu.tests;
 
+import com.softserve.edu.reporter.LoggerUtils;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.bouncycastle.util.Arrays;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
 import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,32 +27,32 @@ public class ParallelTest {
 
     @BeforeAll
     public static void setup() {
-        System.out.println("@BeforeAll executed, ThreadId = " + Thread.currentThread().getId());
+        LoggerUtils.logInfo("@BeforeAll executed, ThreadId = " + Thread.currentThread().getName());
     }
 
     @AfterAll
     public static void tear() {
-        System.out.println("@AfterAll executed, ThreadId = " + Thread.currentThread().getId());
+        LoggerUtils.logInfo("@AfterAll executed, ThreadId = " + Thread.currentThread().getName());
     }
 
     @BeforeEach
     public void setupThis() {
-        System.out.println("\t@BeforeEach executed, ThreadId = " + Thread.currentThread().getId());
+        LoggerUtils.logInfo("\t@BeforeEach executed, ThreadId = " + Thread.currentThread().getName());
     }
 
     @AfterEach
     public void tearThis() {
-        System.out.println("\t@AfterEach executed, ThreadId = " + Thread.currentThread().getId());
+        LoggerUtils.logInfo("\t@AfterEach executed, ThreadId = " + Thread.currentThread().getName());
     }
 
     @Test
-    public void testOne() {
-        System.out.println("\t\t@Test testOne(), ThreadId = " + Thread.currentThread().getId());;
+    void testOne() {
+        LoggerUtils.logInfo("\t\t@Test testOne(), ThreadId = " + Thread.currentThread().getName());
     }
 
     @Test
-    public void testTwo() {
-        System.out.println("\t\t@Test testTwo(), ThreadId = " + Thread.currentThread().getId());
+    void testTwo() {
+        LoggerUtils.logInfo("\t\t@Test testTwo(), ThreadId = " + Thread.currentThread().getName());
     }
 
 
@@ -57,10 +64,17 @@ public class ParallelTest {
         };
     }
 
+    private static Stream<Arguments> urlProvider() {
+        return Stream.of(
+                Arguments.of("http://speak-ukrainian.eastus2.cloudapp.azure.com/dev/"),
+                Arguments.of("https://speak-ukrainian.org.ua/")
+        );
+    }
+
     @ParameterizedTest
     @MethodSource("numbers")
     public void testThree(int[] arr, int num) {
-        System.out.println("\t\t@Test testThree(), ThreadId = " + Thread.currentThread().getId() + "  num = " + num);
+        LoggerUtils.logInfo("\t\t@Test testThree(), ThreadId = " + Thread.currentThread().getId() + "  num = " + num);
         Assertions.assertTrue(Arrays.contains(arr, num), "Array should contain the number");
     }
 
@@ -74,50 +88,44 @@ public class ParallelTest {
     @DisplayName("Should calculate the correct sum")
     @ParameterizedTest(name = "{index} => a={0}, b={1}, sum={2}")
     @MethodSource("sumProvider")
-    public void testFour(int a, int b, int sum) {
-        System.out.println("\t\t@Test testThree(), ThreadId = " + Thread.currentThread().getId() + "  sum = " + sum);
+    void testFour(int a, int b, int sum) {
+        LoggerUtils.logInfo("\t\t@Test testThree(), ThreadId = ", 
+                Thread.currentThread().getName(), "  sum =", String.valueOf(sum));
+        
         Assertions.assertEquals(sum, a + b);
-    }
-
-    private static Stream<Arguments> urlProvider() {
-        return Stream.of(
-                Arguments.of("http://speak-ukrainian.eastus2.cloudapp.azure.com/dev/"),
-                Arguments.of("https://speak-ukrainian.org.ua/")
-        );
     }
 
     @DisplayName("Should calculate the correct sum")
     @ParameterizedTest(name = "{index} => urlProvider={0}")
     @MethodSource("urlProvider")
-    public void testFive(String url) throws InterruptedException {
-        System.out.println("\t\t@Test testThree(), ThreadId = " + Thread.currentThread().getId()
-                + "  url = " + url);
+    void testFive(String url) {
+        LoggerUtils.logInfo("t@Test testThree()", "ThreadId = ",
+                Thread.currentThread().getName(), "  url = ", url);
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--ignore-certificate-errors");
         WebDriver driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10)); // 0 by default
-        Thread.sleep(2000); // For Presentation
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+
         driver.get(url);
-        Thread.sleep(2000); // For Presentation
-        //
-        //driver.quit();
+
+        driver.quit();
     }
 
     @Test
-    public void testSix() {
-        System.out.println("\t\t\t@Test testTwo(), ThreadId = "
-                + Thread.currentThread().getId());
+    void testSix() {
+        LoggerUtils.logInfo("\t\t\t@Test testTwo(), ThreadId = ",
+                Thread.currentThread().getName());
         // From Maven
-        System.out.println("\t\t\tsurefire.java.version = "
+        LoggerUtils.logInfo("\t\t\tsurefire.java.version = "
                 + System.getProperty("surefire.application.password"));
         // From OS
-        System.out.println("\t\t\tSystem.getenv(\"JAVA_HOME\") = "
-                + System.getenv("JAVA_HOME"));
-        System.out.println("\t\t\tSystem.getenv(\"DEFAULT_PASS\") = "
-                + System.getenv("DEFAULT_PASS"));
+        LoggerUtils.logInfo("\t\t\tSystem.getenv(\"JAVA_HOME\") = ",
+                System.getenv("JAVA_HOME"));
+        LoggerUtils.logInfo("\t\t\tSystem.getenv(\"DEFAULT_PASS\") = ", 
+                System.getenv("DEFAULT_PASS"));
         // From Eclipse/Idea
-        System.out.println("\t\t\tSystem.getenv().MY_IDE = "
-                + System.getenv().get("MY_IDE"));
+        LoggerUtils.logInfo("\t\t\tSystem.getenv().MY_IDE = ", 
+                System.getenv().get("MY_IDE"));
     }
 }

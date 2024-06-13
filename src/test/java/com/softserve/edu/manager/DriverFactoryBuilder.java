@@ -1,4 +1,4 @@
-package com.softserve.edu.manger;
+package com.softserve.edu.manager;
 
 import com.softserve.edu.driver.DriverFactory;
 import com.softserve.edu.driver.RemoteDriverFactory;

@@ -1,4 +1,4 @@
-package com.softserve.edu.manger;
+package com.softserve.edu.manager;
 
 import org.openqa.selenium.support.events.WebDriverListener;
 
