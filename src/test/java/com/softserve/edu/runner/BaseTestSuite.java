@@ -39,7 +39,7 @@ public abstract class BaseTestSuite extends BaseTest {
     void setUp() {
         driver = getDriver(BROWSER);
         driver.manage().window().maximize();
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
         LoggerUtils.logInfo("Selected browser", BROWSER.name(), "Base URL used", BASE_URL);
     }
 

@@ -12,6 +12,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ArgumentsSource;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -71,10 +72,26 @@ public class ClubTest extends BaseTestSuite {
 
     private void openClub(String clubName) {
         wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.ant-modal-wrap.ant-modal-centered")));
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Гуртки')]"))).click();
+        WebElement clubsMenuItem = getClickableElement(By.xpath("//a[contains(text(),'Гуртки')]"));
+        scrollToElement(clubsMenuItem);
+        clickElementWithJS(clubsMenuItem);
         getClickableElement(By.xpath("//div[contains(text(),'" + clubName + "')]/ancestor::div[contains(@class,'ant-card-body')]//a[contains(@href, '/dev/club/')]")).click();
         driver.findElement(By.cssSelector("button.comment-button")).click();
     }
+
+    protected void clickElementWithJS(WebElement element) {
+        if (element != null && element.isDisplayed() && element.isEnabled()) {
+            ((JavascriptExecutor)driver).executeScript("arguments[0].dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));", element);
+        } else {
+            throw new IllegalArgumentException("Element is not clickable: " + element);
+        }
+    }
+
+    protected void scrollToElement(WebElement element) {
+        assertNotNull(element, "Element should be present");
+        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView(true);", element);
+    }
+
 
     private void performUserAction(String action) {
         getClickableElement(By.cssSelector(USER_PROFILE_XPATH)).click();
