@@ -23,11 +23,15 @@ public class FirefoxOptionsProvider implements ArgumentsProvider {
         FirefoxOptions untrustedCertsOptions = new FirefoxOptions();
         untrustedCertsOptions.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
 
+        FirefoxOptions untrustedCerts = new FirefoxOptions();
+        untrustedCerts.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS, true);
+
         return Stream.of(
                 Arguments.of(options),
                 Arguments.of(defaultRelease),
                 Arguments.of(headlessOptions)
-                // Arguments.of(untrustedCertsOptions)
+//                Arguments.of(untrustedCerts),
+//                Arguments.of(untrustedCertsOptions)
         );
     }
 }

@@ -9,13 +9,16 @@ public class Configuration {
     private static Configuration instance;
     private static final String CIKey = "CI";
     private static final String baseURLKey = "URL";
+    private static final String emailKey = "EMAIL";
     private static final String browserKey = "BROWSER";
     private static final String passwordKey = "PASSWORD";
     private static final String implicitWaitKey = "WAIT";
     private static final String headlessKey = "IS_HEADLESS";
     private static final Long DEFAULT_IMPLICIT_WAIT = 5L;
-    private static final String DEFAULT_BROWSER = "Firefox";
-    private static final String DEFAULT_URL = "https://www.google.com/";
+    public static final String DEFAULT_BROWSER = "Firefox";
+    public static final String DEFAULT_URL = "https://www.google.com/";
+    public static final String DEFAULT_EMAIL = "user@gmail.com";
+    public static final String DEFAULT_PASSWORD = "user";
 
     public static Configuration getInstance() {
         return instance == null ? new Configuration() : instance;
@@ -27,16 +30,18 @@ public class Configuration {
 
     public String getPassword() {
         String password = System.getenv(passwordKey);
-        return password != null ? password : dotenv.get(passwordKey);
+        return password != null ? password : dotenv.get(passwordKey, DEFAULT_PASSWORD);
     }
+
+    public String getEmail() {
+        String email = System.getenv(emailKey);
+        return email != null ? email : dotenv.get(emailKey, DEFAULT_EMAIL);
+    }
+
 
     public String getBrowser() {
         String browser = System.getenv(browserKey);
         return browser != null ? browser : dotenv.get(browserKey, DEFAULT_BROWSER);
-    }
-
-    public String getDefaultUrl() {
-        return DEFAULT_URL;
     }
 
     public String getBaseURL() {

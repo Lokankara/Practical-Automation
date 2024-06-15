@@ -17,7 +17,9 @@ public class ChromeOptionsArgumentsProvider implements ArgumentsProvider {
                 Arguments.of(buildChromeOptions(testArguments.get(0), testArguments.get(1), testArguments.get(2), testArguments.get(3))),
                 Arguments.of(buildChromeOptions(testArguments.get(0), testArguments.get(1), testArguments.get(2), testArguments.get(4))),
                 Arguments.of(buildChromeOptions(testArguments.get(0), testArguments.get(1), testArguments.get(5), testArguments.get(6))),
-                Arguments.of(buildChromeOptions(testArguments.get(7)))
+                Arguments.of(buildChromeOptions(testArguments.get(7))),
+                Arguments.of(buildChromeOptions(testArguments.get(8)))
+
         );
     }
 

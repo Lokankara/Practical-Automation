@@ -28,7 +28,7 @@ import java.time.Duration;
 
 import static com.softserve.edu.manager.Browsers.CHROME;
 import static com.softserve.edu.manager.Browsers.FIREFOX;
-import static com.softserve.edu.runner.TestData.DEFAULT_URL;
+import static com.softserve.edu.manager.Configuration.DEFAULT_URL;
 import static com.softserve.edu.runner.TestData.SPEAK_UKRAINIAN_URL;
 import static com.softserve.edu.runner.TestData.testArguments;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -41,17 +41,18 @@ class BrowsersTest extends BaseBrowserTest {
     @DisplayName("Test opening Google in different browsers")
     @EnumSource(value = Browsers.class, names = {"CHROME", "EDGE", "FIREFOX"})
     void testDifferentBrowsers(Browsers browser) {
-        WebDriver driver = getWebDriver(browser);
+        WebDriver driver = getDriver(browser);
         driver.get(DEFAULT_URL);
 
         assertContainsUrl(driver.getCurrentUrl(), DEFAULT_URL);
+
     }
 
     @ParameterizedTest
     @DisplayName("Test FirefoxDriver with fill search submit")
     @ValueSource(strings = {"Cheese!", "Cake"})
     void testFirefoxWithFillSearchSubmit(String value) {
-        WebDriver driver = getWebDriver(FIREFOX);
+        WebDriver driver = getDriver(FIREFOX);
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
 
@@ -64,7 +65,7 @@ class BrowsersTest extends BaseBrowserTest {
     @DisplayName("Test Driver with Firefox's options")
     void testFirefoxWithOptionsMode(FirefoxOptions options) {
         String value = "Cheese";
-        WebDriver driver = getWebDriver(options);
+        WebDriver driver = getDriver(options);
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
         assertContainsUrl(driver.getCurrentUrl(), DEFAULT_URL);
@@ -74,7 +75,7 @@ class BrowsersTest extends BaseBrowserTest {
     @ArgumentsSource(EdgeOptionsArgumentsProvider.class)
     @DisplayName("Test EdgeDriver with different configurations")
     void testEdgeDriver(EdgeOptions options) {
-        WebDriver driver = getWebDriver(options);
+        WebDriver driver = getDriver(options);
         driver.get(SPEAK_UKRAINIAN_URL);
 
         assertEquals(SPEAK_UKRAINIAN_URL, driver.getCurrentUrl(), "URL should be the" + SPEAK_UKRAINIAN_URL);
@@ -86,7 +87,7 @@ class BrowsersTest extends BaseBrowserTest {
     @ValueSource(strings = {"Cheese", "Cake"})
     void testChrome(String value) {
         final String expected = "Google";
-        WebDriver driver = getWebDriver(CHROME);
+        WebDriver driver = getDriver(CHROME);
         driver.manage().window().maximize();
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
@@ -103,7 +104,7 @@ class BrowsersTest extends BaseBrowserTest {
         final String expected = "Google";
         final String value = "Cheese";
 
-        WebDriver driver = getWebDriver(options);
+        WebDriver driver = getDriver(options);
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
 
@@ -117,7 +118,7 @@ class BrowsersTest extends BaseBrowserTest {
     void testChromeWithIgnoreCertificate() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments(testArguments.subList(0, 5));
-        WebDriver driver = getWebDriver(options);
+        WebDriver driver = getDriver(options);
         driver.get(SPEAK_UKRAINIAN_URL);
 
         assertEquals(SPEAK_UKRAINIAN_URL, driver.getCurrentUrl(), "URL should be the URL: " + SPEAK_UKRAINIAN_URL);
@@ -132,7 +133,7 @@ class BrowsersTest extends BaseBrowserTest {
         options.addArguments("--no-proxy-server");
         options.setBinary("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe");
 
-        WebDriver driver = getWebDriver(options);
+        WebDriver driver = getDriver(options);
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, "Cheese!");
 

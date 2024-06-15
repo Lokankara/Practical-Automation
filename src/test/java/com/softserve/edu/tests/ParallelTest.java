@@ -1,7 +1,7 @@
 package com.softserve.edu.tests;
 
 import com.softserve.edu.reporter.LoggerUtils;
-import io.github.bonigarcia.wdm.WebDriverManager;
+import com.softserve.edu.runner.BaseTestSuite;
 import org.bouncycastle.util.Arrays;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
@@ -15,15 +15,14 @@ import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
-import java.time.Duration;
 import java.util.stream.Stream;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 @Execution(ExecutionMode.CONCURRENT)
-public class ParallelTest {
+public class ParallelTest extends BaseTestSuite {
 
     @BeforeAll
     public static void setup() {
@@ -74,7 +73,7 @@ public class ParallelTest {
     @ParameterizedTest
     @MethodSource("numbers")
     void testThree(int[] arr, int num) {
-        LoggerUtils.logInfo("@Test testThree()" + Thread.currentThread().getId() + "  num = " + num);
+        LoggerUtils.logInfo("@Test testThree()", Thread.currentThread().getName(), "  num = " + num);
         Assertions.assertTrue(Arrays.contains(arr, num), "Array should contain the number");
     }
 
@@ -89,10 +88,10 @@ public class ParallelTest {
     @ParameterizedTest(name = "{index} => a={0}, b={1}, sum={2}")
     @MethodSource("sumProvider")
     void testFour(int a, int b, int sum) {
-        LoggerUtils.logInfo("@Test testThree()", 
+        LoggerUtils.logInfo("@Test testThree()",
                 Thread.currentThread().getName(), "  sum =", String.valueOf(sum));
-        
-        Assertions.assertEquals(sum, a + b);
+
+        assertEquals(sum, a + b);
     }
 
     @DisplayName("Should calculate the correct sum")
@@ -100,30 +99,18 @@ public class ParallelTest {
     @MethodSource("urlProvider")
     void testFive(String url) {
         LoggerUtils.logInfo("@TestThree()", Thread.currentThread().getName(), "  url = ", url);
-        WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--ignore-certificate-errors");
-        WebDriver driver = new ChromeDriver(options);
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
-
         driver.get(url);
-        driver.quit();
+        assertEquals(driver.getCurrentUrl(), url);
     }
 
     @Test
     void testSix() {
-        LoggerUtils.logInfo("@Test testTwo()",
-                Thread.currentThread().getName());
-        // From Maven
-        LoggerUtils.logInfo("surefire.java.version = "
-                + System.getProperty("surefire.application.password"));
-        // From OS
-        LoggerUtils.logInfo("System.getenv(\"JAVA_HOME\") = ",
-                System.getenv("JAVA_HOME"));
-        LoggerUtils.logInfo("System.getenv(\"DEFAULT_PASS\") = ",
-                System.getenv("DEFAULT_PASS"));
-        // From Eclipse/Idea
-        LoggerUtils.logInfo("System.getenv().MY_IDE = ",
-                System.getenv().get("MY_IDE"));
+        LoggerUtils.logInfo("@Test testTwo()", Thread.currentThread().getName());
+        LoggerUtils.logInfo("surefire.java.version", System.getProperty("surefire.application.password"));
+        LoggerUtils.logInfo("System.getenv(\"JAVA_HOME\")", System.getenv("JAVA_HOME"));
+        LoggerUtils.logInfo("System.getenv(\"DEFAULT_PASS\")", System.getenv("DEFAULT_PASS"));
+        LoggerUtils.logInfo("System.getenv().MY_IDE", System.getenv().get("MY_IDE"));
     }
 }

@@ -1,6 +1,8 @@
 package com.softserve.edu.runner;
 
+import com.softserve.edu.manager.DriverManager;
 import com.softserve.edu.reporter.LoggerUtils;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,10 +34,16 @@ public abstract class BaseTestSuite extends BaseTest {
         LoggerUtils.logInfo("Selected browser", BROWSER.name(), "Base URL used", BASE_URL);
     }
 
-
     @AfterEach
     void tearDown() {
         String threadName = Thread.currentThread().getName();
         LoggerUtils.logPass("Closed", threadName);
+    }
+
+    @AfterAll
+    public static void tear() {
+        DriverManager.quitAll();
+        LoggerUtils.logPass("@AfterAll executed",
+                String.valueOf(Thread.currentThread().getName()));
     }
 }
