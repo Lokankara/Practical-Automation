@@ -8,6 +8,4 @@ public interface DriverFactory {
     WebDriver getDriver();
 
     MutableCapabilities getCapabilities();
-
-    DriverFactory setHeadless(boolean isHeadless);
 }

@@ -1,11 +1,9 @@
 package com.softserve.edu.tests;
 
 import com.softserve.edu.manager.Configuration;
-import com.softserve.edu.manager.DriverManager;
 import com.softserve.edu.provider.CommentArgumentsProvider;
 import com.softserve.edu.reporter.LoggerUtils;
 import com.softserve.edu.runner.BaseTestSuite;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,50 +18,45 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@Execution(ExecutionMode.SAME_THREAD)
+@Execution(ExecutionMode.CONCURRENT)
 public class ClubTest extends BaseTestSuite {
-
     private static final String RATE_XPATH = "(//*[@id='comment-edit_rate']//li[contains(@class, 'ant-rate-star')]/div)[last()]";
     private static final String USER_PROFILE_XPATH = "div.user-profile span.anticon.anticon-caret-down";
-    private static final String BASE_URL = Configuration.getInstance().getBaseURL();
 
     @BeforeAll
     public static void setup() {
-        LoggerUtils.logInfo("@BeforeAll executed ThreadId",
-                String.valueOf(Thread.currentThread().getName()));
-    }
-
-    @AfterAll
-    public static void tear() {
-        DriverManager.quitAll();
-        LoggerUtils.logPass("@AfterAll executed",
+        LoggerUtils.logInfo("@BeforeAll executed",
                 String.valueOf(Thread.currentThread().getName()));
     }
 
     @BeforeEach
-    public void setupThis() {
-        driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Configuration.getInstance().getDuration());
+    void setupThis() {
+        isSuccess = false;
         driver.get(Configuration.getInstance().getBaseURL());
         LoggerUtils.logInfo("@BeforeEach executed",
                 String.valueOf(Thread.currentThread().getName()));
     }
 
     @AfterEach
-    public void tearThis() {
-        LoggerUtils.logInfo("@AfterEach executed");
+    void tearThis() {
+        LoggerUtils.logInfo("User Logout", "@AfterEach executed",
+                String.valueOf(Thread.currentThread().getName()));
+        if(!isSuccess){
+            takeScreenShot(driver);
+        }
+        driver.quit();
     }
 
     @ParameterizedTest(name = "Test comment for user {0} in club {2}")
     @ArgumentsSource(CommentArgumentsProvider.class)
     void testCommentUser(String username, String password, String clubName, String userComment) {
-        driver.get(BASE_URL);
         performUserAction("login");
         signIn(username, password);
         openClub(clubName);
         leaveComment(userComment);
         verifyUserComment(userComment);
         performUserAction("logout");
+        isSuccess = true;
     }
 
     private void verifyUserComment(String userComment) {
@@ -78,8 +71,9 @@ public class ClubTest extends BaseTestSuite {
     }
 
     private void openClub(String clubName) {
-        getClickableElement(By.xpath("//span[@class='ant-menu-title-content']/a[text()='Гуртки']")).click();
-        getClickableElement(By.xpath("//div[@class='ant-card-body']//div[contains(text(),'" + clubName + "')]/../../a[contains(@href, '/club/')]")).click();
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.ant-modal-wrap.ant-modal-centered")));
+        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[contains(text(),'Гуртки')]"))).click();
+        getClickableElement(By.xpath("//div[contains(text(),'" + clubName + "')]/ancestor::div[contains(@class,'ant-card-body')]//a[contains(@href, '/dev/club/')]")).click();
         driver.findElement(By.cssSelector("button.comment-button")).click();
     }
 

@@ -1,56 +1,67 @@
 package com.softserve.edu.manager;
 
+import io.github.cdimascio.dotenv.Dotenv;
+
 import java.time.Duration;
 
 public class Configuration {
+    private final Dotenv dotenv;
     private static Configuration instance;
+    private static final String CIKey = "CI";
     private static final String baseURLKey = "URL";
     private static final String browserKey = "BROWSER";
-    private static final String implicitWaitKey = "WAIT";
-    private static final String DEFAULT_BROWSER = "Firefox";
-    private static final String headlessKey = "IS_HEADLESS";
-    private static final String DEFAULT_URL = "https://www.google.com";
-    private static final Long DEFAULT_IMPLICIT_WAIT = 5L;
     private static final String passwordKey = "PASSWORD";
-    public static final String PASSWORD = "Qwerty_1";
+    private static final String implicitWaitKey = "WAIT";
+    private static final String headlessKey = "IS_HEADLESS";
+    private static final Long DEFAULT_IMPLICIT_WAIT = 5L;
+    private static final String DEFAULT_BROWSER = "Firefox";
+    private static final String DEFAULT_URL = "https://www.google.com/";
 
     public static Configuration getInstance() {
         return instance == null ? new Configuration() : instance;
     }
 
+    private Configuration() {
+        dotenv = Dotenv.load();
+    }
+
     public String getPassword() {
         String password = System.getenv(passwordKey);
-        return password != null ? password : PASSWORD;
+        return password != null ? password : dotenv.get(passwordKey);
     }
 
     public String getBrowser() {
         String browser = System.getenv(browserKey);
-        return browser == null ? DEFAULT_BROWSER : browser;
+        return browser != null ? browser : dotenv.get(browserKey, DEFAULT_BROWSER);
+    }
+
+    public String getDefaultUrl() {
+        return DEFAULT_URL;
     }
 
     public String getBaseURL() {
-        return System.getenv(baseURLKey) == null
-                ? DEFAULT_URL : System.getenv(baseURLKey);
+        String url = System.getenv(baseURLKey);
+        return url != null ? url : dotenv.get(baseURLKey, DEFAULT_URL);
     }
 
     public boolean isHeadless() {
-        return !isServerRun() && System.getenv(headlessKey) == null
-                || Boolean.parseBoolean(System.getenv(headlessKey));
+        return isServerRun()
+                || "true".equalsIgnoreCase(System.getenv(headlessKey))
+                || "true".equalsIgnoreCase(dotenv.get(headlessKey));
     }
 
     public Duration getDuration() {
         return Duration.ofSeconds(getImplicitWaitDuration());
     }
 
-    private Long getImplicitWaitDuration() {
+    private long getImplicitWaitDuration() {
         String implicitWaitValue = System.getenv(implicitWaitKey);
-        return implicitWaitValue == null
-                ? DEFAULT_IMPLICIT_WAIT
-                : Integer.parseInt(implicitWaitValue);
+        return implicitWaitValue != null ? Long.parseLong(implicitWaitValue)
+                : Long.parseLong(dotenv.get(implicitWaitKey, String.valueOf(DEFAULT_IMPLICIT_WAIT)));
     }
 
     public static boolean isServerRun() {
-        String ci = System.getenv("CI");
+        String ci = System.getenv(CIKey);
         return ci != null;
     }
 }

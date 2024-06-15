@@ -20,9 +20,7 @@ public class LoggerUtils {
         logger.info("{} {}", INFO, messages);
     }
 
-    public static void logError(String... message) {
-        logger.error("{} {}", ERROR, message);
-    }
+    public static void logError(String... message) {logger.error("{} {}", ERROR, message);}
 
     public static void logWarning(String... message) {
         logger.warn("{} {}", WARN, message);

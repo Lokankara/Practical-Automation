@@ -27,32 +27,32 @@ public class ParallelTest {
 
     @BeforeAll
     public static void setup() {
-        LoggerUtils.logInfo("@BeforeAll executed, ThreadId = " + Thread.currentThread().getName());
+        LoggerUtils.logInfo("@BeforeAll executed" + Thread.currentThread().getName());
     }
 
     @AfterAll
     public static void tear() {
-        LoggerUtils.logInfo("@AfterAll executed, ThreadId = " + Thread.currentThread().getName());
+        LoggerUtils.logInfo("@AfterAll executed" + Thread.currentThread().getName());
     }
 
     @BeforeEach
-    public void setupThis() {
-        LoggerUtils.logInfo("\t@BeforeEach executed, ThreadId = " + Thread.currentThread().getName());
+    void setupThis() {
+        LoggerUtils.logInfo("@BeforeEach executed" + Thread.currentThread().getName());
     }
 
     @AfterEach
-    public void tearThis() {
-        LoggerUtils.logInfo("\t@AfterEach executed, ThreadId = " + Thread.currentThread().getName());
+    void tearThis() {
+        LoggerUtils.logInfo("@AfterEach executed" + Thread.currentThread().getName());
     }
 
     @Test
     void testOne() {
-        LoggerUtils.logInfo("\t\t@Test testOne(), ThreadId = " + Thread.currentThread().getName());
+        LoggerUtils.logInfo("@Test testOne()" + Thread.currentThread().getName());
     }
 
     @Test
     void testTwo() {
-        LoggerUtils.logInfo("\t\t@Test testTwo(), ThreadId = " + Thread.currentThread().getName());
+        LoggerUtils.logInfo("@Test testTwo()" + Thread.currentThread().getName());
     }
 
 
@@ -73,8 +73,8 @@ public class ParallelTest {
 
     @ParameterizedTest
     @MethodSource("numbers")
-    public void testThree(int[] arr, int num) {
-        LoggerUtils.logInfo("\t\t@Test testThree(), ThreadId = " + Thread.currentThread().getId() + "  num = " + num);
+    void testThree(int[] arr, int num) {
+        LoggerUtils.logInfo("@Test testThree()" + Thread.currentThread().getId() + "  num = " + num);
         Assertions.assertTrue(Arrays.contains(arr, num), "Array should contain the number");
     }
 
@@ -89,7 +89,7 @@ public class ParallelTest {
     @ParameterizedTest(name = "{index} => a={0}, b={1}, sum={2}")
     @MethodSource("sumProvider")
     void testFour(int a, int b, int sum) {
-        LoggerUtils.logInfo("\t\t@Test testThree(), ThreadId = ", 
+        LoggerUtils.logInfo("@Test testThree()", 
                 Thread.currentThread().getName(), "  sum =", String.valueOf(sum));
         
         Assertions.assertEquals(sum, a + b);
@@ -99,8 +99,7 @@ public class ParallelTest {
     @ParameterizedTest(name = "{index} => urlProvider={0}")
     @MethodSource("urlProvider")
     void testFive(String url) {
-        LoggerUtils.logInfo("t@Test testThree()", "ThreadId = ",
-                Thread.currentThread().getName(), "  url = ", url);
+        LoggerUtils.logInfo("@TestThree()", Thread.currentThread().getName(), "  url = ", url);
         WebDriverManager.chromedriver().setup();
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--ignore-certificate-errors");
@@ -108,24 +107,23 @@ public class ParallelTest {
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
 
         driver.get(url);
-
         driver.quit();
     }
 
     @Test
     void testSix() {
-        LoggerUtils.logInfo("\t\t\t@Test testTwo(), ThreadId = ",
+        LoggerUtils.logInfo("@Test testTwo()",
                 Thread.currentThread().getName());
         // From Maven
-        LoggerUtils.logInfo("\t\t\tsurefire.java.version = "
+        LoggerUtils.logInfo("surefire.java.version = "
                 + System.getProperty("surefire.application.password"));
         // From OS
-        LoggerUtils.logInfo("\t\t\tSystem.getenv(\"JAVA_HOME\") = ",
+        LoggerUtils.logInfo("System.getenv(\"JAVA_HOME\") = ",
                 System.getenv("JAVA_HOME"));
-        LoggerUtils.logInfo("\t\t\tSystem.getenv(\"DEFAULT_PASS\") = ", 
+        LoggerUtils.logInfo("System.getenv(\"DEFAULT_PASS\") = ",
                 System.getenv("DEFAULT_PASS"));
         // From Eclipse/Idea
-        LoggerUtils.logInfo("\t\t\tSystem.getenv().MY_IDE = ", 
+        LoggerUtils.logInfo("System.getenv().MY_IDE = ",
                 System.getenv().get("MY_IDE"));
     }
 }
