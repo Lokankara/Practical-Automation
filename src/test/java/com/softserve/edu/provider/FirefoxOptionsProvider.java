@@ -15,7 +15,7 @@ public class FirefoxOptionsProvider implements ArgumentsProvider {
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
         FirefoxOptions headlessOptions = new FirefoxOptions().addArguments("-headless");
-        FirefoxOptions defaultRelease = new FirefoxOptions().setProfile(new ProfilesIni().getProfile("default-release"));
+//        FirefoxOptions defaultRelease = new FirefoxOptions().setProfile(new ProfilesIni().getProfile("default-release"));
 
 //        String pathProfile = System.getProperty("user.home") + "/AppData/Roaming/Mozilla/Firefox/Profiles/ejwel82b.default-release";
 //        FirefoxOptions options = new FirefoxOptions().setProfile(new FirefoxProfile(new File(pathProfile)));
@@ -28,7 +28,7 @@ public class FirefoxOptionsProvider implements ArgumentsProvider {
 
         return Stream.of(
 //                Arguments.of(options),
-                Arguments.of(defaultRelease),
+//                Arguments.of(defaultRelease),
                 Arguments.of(headlessOptions),
                 Arguments.of(untrustedCerts)
 //                Arguments.of(untrustedCertsOptions)

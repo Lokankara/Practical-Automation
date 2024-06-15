@@ -44,7 +44,6 @@ public class ClubTest extends BaseTestSuite {
         if(!isSuccess){
             takeScreenShot(driver);
         }
-        driver.quit();
     }
 
     @ParameterizedTest(name = "Test comment for user {0} in club {2}")
