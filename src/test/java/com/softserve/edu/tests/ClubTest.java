@@ -42,7 +42,7 @@ public class ClubTest extends BaseTestSuite {
     void tearThis() {
         LoggerUtils.logInfo("User Logout", "@AfterEach executed",
                 String.valueOf(Thread.currentThread().getName()));
-        if(!isSuccess){
+        if (!isSuccess) {
             takeScreenShot(driver);
         }
     }
@@ -50,6 +50,7 @@ public class ClubTest extends BaseTestSuite {
     @ParameterizedTest(name = "Test comment for user {0} in club {2}")
     @ArgumentsSource(CommentArgumentsProvider.class)
     void testCommentUser(String username, String password, String clubName, String userComment) {
+        LoggerUtils.logInfo(username, password);
         performUserAction("login");
         signIn(username, password);
         openClub(clubName);
@@ -81,7 +82,7 @@ public class ClubTest extends BaseTestSuite {
 
     protected void clickElementWithJS(WebElement element) {
         if (element != null && element.isDisplayed() && element.isEnabled()) {
-            ((JavascriptExecutor)driver).executeScript("arguments[0].dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));", element);
+            ((JavascriptExecutor) driver).executeScript("arguments[0].dispatchEvent(new MouseEvent('click', {bubbles: true, cancelable: true, view: window}));", element);
         } else {
             throw new IllegalArgumentException("Element is not clickable: " + element);
         }
@@ -89,7 +90,7 @@ public class ClubTest extends BaseTestSuite {
 
     protected void scrollToElement(WebElement element) {
         assertNotNull(element, "Element should be present");
-        ((JavascriptExecutor)driver).executeScript("arguments[0].scrollIntoView(true);", element);
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", element);
     }
 
 

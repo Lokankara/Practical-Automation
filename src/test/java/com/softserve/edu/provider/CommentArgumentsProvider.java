@@ -16,7 +16,7 @@ public class CommentArgumentsProvider implements ArgumentsProvider {
     @Override
     public Stream<? extends Arguments> provideArguments(ExtensionContext context) {
         return Stream.of(
-                Arguments.of(EMAIL, PASSWORD, "IT освіта: курси", "Проба Коментар"),
+                Arguments.of("yagifij495@eqvox.com", "Qwerty_1", "IT освіта: курси", "Проба Коментар"),
                 Arguments.of(DEFAULT_EMAIL, DEFAULT_PASSWORD, "Онлайн-школа точних наук", "User Коментар")
         );
     }
