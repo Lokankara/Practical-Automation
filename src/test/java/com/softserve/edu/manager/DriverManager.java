@@ -4,12 +4,10 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class DriverManager {
 
     private static final ThreadLocal<WebDriver> threadLocalDriver = new ThreadLocal<>();
-    private static final ThreadLocal<WebDriverWait> threadLocalWait = new ThreadLocal<>();
 
     private DriverManager() {
     }
@@ -45,11 +43,9 @@ public class DriverManager {
     private static void putToMap(WebDriver driver) {
         driver.manage().timeouts().implicitlyWait(Configuration.getInstance().getDuration());
         threadLocalDriver.set(driver);
-        threadLocalWait.set(new WebDriverWait(driver, Configuration.getInstance().getDuration()));
     }
 
     public static void quitAll() {
         threadLocalDriver.remove();
-        threadLocalWait.remove();
     }
 }
