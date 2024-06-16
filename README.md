@@ -1,6 +1,7 @@
 ## Task 1
 
 [Links](https://github.com/ita-classroom-projects/taqc-cross-browser-testing-Lokankara)
+[Report](https://github.com/Lokankara/Practical-Automation/runs/26272303431)
 
 1. The test methods test the functionality of inserting comments.
 2. Add the IS_HEADLESS environment variable. If the variable IS_HEADLESS is true, then the tests should be executed without a GUI. Print to the console a message about the steps performed.

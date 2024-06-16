@@ -27,25 +27,25 @@ public abstract class BaseBrowserTest extends BaseTest {
     private static final Map<String, WebDriver> drivers = new ConcurrentHashMap<>();
 
     public WebDriver getDriver(Browsers browser) {
-        String threadName = String.valueOf(Thread.currentThread().getId());
+        String threadName = String.valueOf(Thread.currentThread().getName());
         LoggerUtils.logInfo("Thread", threadName, browser.name());
         return drivers.computeIfAbsent(threadName, k -> getWebDriver(browser));
     }
 
     public WebDriver getDriver(ChromeOptions options) {
-        String threadName = String.valueOf(Thread.currentThread().getId());
+        String threadName = String.valueOf(Thread.currentThread().getName());
         LoggerUtils.logInfo("Thread", threadName, options.getBrowserName());
         return drivers.computeIfAbsent(threadName, k -> getWebDriver(options));
     }
 
     public WebDriver getDriver(EdgeOptions options) {
-        String threadName = String.valueOf(Thread.currentThread().getId());
+        String threadName = String.valueOf(Thread.currentThread().getName());
         LoggerUtils.logInfo("Thread", threadName, options.getBrowserName());
         return drivers.computeIfAbsent(threadName, k -> getWebDriver(options));
     }
 
     public WebDriver getDriver(FirefoxOptions options) {
-        String threadName = String.valueOf(Thread.currentThread().getId());
+        String threadName = String.valueOf(Thread.currentThread().getName());
         LoggerUtils.logInfo("Thread", threadName, options.getBrowserName());
         return drivers.computeIfAbsent(threadName, k -> getWebDriver(options));
     }
@@ -81,14 +81,10 @@ public abstract class BaseBrowserTest extends BaseTest {
         WebElement element = driver.findElement(By.name("q"));
         element.sendKeys(value);
         element.submit();
-        LoggerUtils.logInfo("Page title is", driver.getTitle());
     }
 
-    protected void assertContainsUrl(String actualUrl, String expected) {
-        assertTrue(actualUrl.contains(expected), String.format("URL should be the : %n%s%n%s%n", expected, actualUrl));
-    }
-
-    protected void assertTitle(String actualTitle, String expected) {
-        assertTrue(actualTitle.contains(expected), String.format("Title should be contains: %n%s%n%s%n", expected, actualTitle));
+    protected void assertContains(String actual, String expected) {
+        assertTrue(actual.contains(expected),
+                String.format("URL should be the : %n%s%n%s%n", expected, actual));
     }
 }

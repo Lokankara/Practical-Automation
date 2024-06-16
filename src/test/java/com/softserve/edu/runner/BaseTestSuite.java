@@ -25,7 +25,7 @@ public abstract class BaseTestSuite extends BaseTest {
     private static final Map<String, WebDriver> drivers = new ConcurrentHashMap<>();
 
     public WebDriver getDriver(Browsers browser) {
-        String threadName = String.valueOf(Thread.currentThread().getId());
+        String threadName = String.valueOf(Thread.currentThread().getName());
         LoggerUtils.logInfo("Thread", threadName, browser.name());
         return drivers.computeIfAbsent(threadName, k -> getWebDriver(browser));
     }

@@ -6,13 +6,15 @@ import com.softserve.edu.driver.RemoteDriverFactory;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.net.URL;
 
 public class DriverFactoryBuilder {
 
-    public static DriverFactory getFactory(String browser, String gridUrl) {
-        return gridUrl != null && !gridUrl.isBlank()
-                ? new RemoteDriverFactory(browser, gridUrl)
-                : getFactory(browser);
+    public static DriverFactory getFactory(URL url, DesiredCapabilities capabilities) {
+        return url != null ? new RemoteDriverFactory(url, capabilities)
+                : getFactory(capabilities.getBrowserName());
     }
 
     public static DriverFactory getFactory(String browser) {
