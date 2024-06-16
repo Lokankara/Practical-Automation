@@ -4,6 +4,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.DesiredCapabilities;
+
+import java.net.URL;
 
 public class DriverManager {
 
@@ -47,5 +50,12 @@ public class DriverManager {
 
     public static void quitAll() {
         threadLocalDriver.remove();
+    }
+
+    public static WebDriver getWebDriver(URL url, DesiredCapabilities capabilities) {
+        if (threadLocalDriver.get() == null) {
+            putToMap(DriverFactoryBuilder.getFactory(url, capabilities).getDriver());
+        }
+        return threadLocalDriver.get();
     }
 }

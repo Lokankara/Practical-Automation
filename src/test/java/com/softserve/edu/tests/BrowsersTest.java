@@ -1,11 +1,13 @@
 package com.softserve.edu.tests;
 
 import com.softserve.edu.manager.Browsers;
+import com.softserve.edu.manager.DriverManager;
 import com.softserve.edu.provider.ChromeOptionsArgumentsProvider;
 import com.softserve.edu.provider.EdgeOptionsArgumentsProvider;
 import com.softserve.edu.provider.FirefoxOptionsProvider;
 import com.softserve.edu.reporter.LoggerUtils;
 import com.softserve.edu.runner.BaseBrowserTest;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.Execution;
@@ -16,14 +18,15 @@ import org.junit.jupiter.params.provider.EnumSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
 
+import java.io.File;
 import java.time.Duration;
 
 import static com.softserve.edu.manager.Browsers.CHROME;
@@ -44,8 +47,7 @@ class BrowsersTest extends BaseBrowserTest {
         WebDriver driver = getDriver(browser);
         driver.get(DEFAULT_URL);
 
-        assertContainsUrl(driver.getCurrentUrl(), DEFAULT_URL);
-
+        assertContains(driver.getCurrentUrl(), DEFAULT_URL);
     }
 
     @ParameterizedTest
@@ -56,7 +58,7 @@ class BrowsersTest extends BaseBrowserTest {
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
 
-        assertContainsUrl(driver.getCurrentUrl(), DEFAULT_URL);
+        assertContains(driver.getCurrentUrl(), DEFAULT_URL);
         takeScreenShot(driver);
     }
 
@@ -68,7 +70,7 @@ class BrowsersTest extends BaseBrowserTest {
         WebDriver driver = getDriver(options);
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
-        assertContainsUrl(driver.getCurrentUrl(), DEFAULT_URL);
+        assertContains(driver.getCurrentUrl(), DEFAULT_URL);
     }
 
     @ParameterizedTest
@@ -92,7 +94,7 @@ class BrowsersTest extends BaseBrowserTest {
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
 
-        assertTitle(driver.getTitle(), expected);
+        assertContains(driver.getTitle(), expected);
         assertTrue(driver.getCurrentUrl().contains(DEFAULT_URL));
         takeScreenShot(driver);
     }
@@ -108,8 +110,8 @@ class BrowsersTest extends BaseBrowserTest {
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, value);
 
-        assertTitle(driver.getTitle(), expected);
-        assertContainsUrl(driver.getCurrentUrl(), DEFAULT_URL);
+        assertContains(driver.getTitle(), expected);
+        assertContains(driver.getCurrentUrl(), DEFAULT_URL);
         takeScreenShot(driver);
     }
 
@@ -125,8 +127,7 @@ class BrowsersTest extends BaseBrowserTest {
         takeScreenShot(driver);
     }
 
-
-    // @Test Specified location
+    @Test //Specified location
     void testChromeSpecifiedLocation() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
@@ -137,7 +138,7 @@ class BrowsersTest extends BaseBrowserTest {
         driver.get(DEFAULT_URL);
         fillSearchSubmit(driver, "Cheese!");
 
-        assertContainsUrl(driver.getCurrentUrl(), DEFAULT_URL);
+        assertContains(driver.getCurrentUrl(), DEFAULT_URL);
         takeScreenShot(driver);
     }
 
@@ -176,19 +177,19 @@ class BrowsersTest extends BaseBrowserTest {
     }
 
 //    @BeforeAll
-//    public static void createService() throws Exception {
-//        service = new ChromeDriverService.Builder()
-//                // .usingDriverExecutable(new File("./lib/chromedriver.exe"))
-//                .usingDriverExecutable(new File(System.getenv("HOMEPATH")
-//                        + "\\.cache\\selenium\\chromedriver\\win64\\125.0.6422.141\\chromedriver.exe"))
-//                // .usingAnyFreePort()
-//                .usingPort(8888).build();
-//        service.start();
-//        LoggerUtils.logInfo("+++Service Start");
-//    }
+    public static void createService() throws Exception {
+        service = new ChromeDriverService.Builder()
+                 .usingDriverExecutable(new File( "c:\\Users\\tmp\\.cache\\selenium\\chromedriver\\win64\\125.0.6422.141\\chromedriver.exe"))
+                // .usingDriverExecutable(new File("./lib/chromedriver.exe"))
+//                .usingDriverExecutable(new File(System.getenv("HOMEPATH") + "\\.cache\\selenium\\chromedriver\\win64\\125.0.6422.141\\chromedriver.exe"))
+                // .usingAnyFreePort()
+                .usingPort(8888).build();
+        service.start();
+        LoggerUtils.logInfo("+++Service Start");
+    }
 
-    //@Test
-    void testRemoute() {
+//    @Test
+    void testRemote() {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--start-maximized");
         options.addArguments("--no-proxy-server");
@@ -196,21 +197,21 @@ class BrowsersTest extends BaseBrowserTest {
         //options.addArguments("--disable-web-security");
         //options.addArguments("--ignore-certificate-errors");
         //options.addArguments("--disable-extensions");
-        // WebDriver driver = new ChromeDriver(options);
-        //
         options.setBinary("C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe");
+
         // DesiredCapabilities capabilities = DesiredCapabilities.chrome();
         DesiredCapabilities capabilities = new DesiredCapabilities();
         capabilities.setCapability(ChromeOptions.CAPABILITY, options);
         // WebDriver driver = new RemoteWebDriver(new URL("127.0.0.1:8888"),capabilities);
-        WebDriver driver = new RemoteWebDriver(service.getUrl(), capabilities);
+
+        WebDriver driver = DriverManager.getWebDriver(service.getUrl(), capabilities);
         LoggerUtils.logInfo("+++RemoteWebDriver Start, service.getUrl()=" + service.getUrl());
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.get(DEFAULT_URL);
-        fillSearchSubmit(driver, "Cheese!");
+        fillSearchSubmit(driver, "Cheese");
 
         takeScreenShot(driver);
-        driver.quit();
         LoggerUtils.logInfo("+++driver.quit()");
+        assertContains(driver.getCurrentUrl(), DEFAULT_URL);
     }
 }

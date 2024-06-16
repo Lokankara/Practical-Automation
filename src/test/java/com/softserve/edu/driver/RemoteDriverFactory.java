@@ -9,33 +9,27 @@ import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URISyntaxException;
+import java.net.URL;
 
 import static com.softserve.edu.runner.TestData.commonArguments;
 
 public class RemoteDriverFactory extends AbstractDriverFactory {
     private final String browser;
-    private final String gridUrl;
+    private final URL gridUrl;
 
     private final DesiredCapabilities capabilities;
 
-    public RemoteDriverFactory(String browser, String gridUrl) {
-        this.gridUrl = gridUrl;
-        this.browser = browser.toUpperCase();
-        capabilities = new DesiredCapabilities();
+
+    public RemoteDriverFactory(URL url, DesiredCapabilities capabilities) {
+        this.browser = capabilities.getBrowserName().toUpperCase();
+        this.capabilities = capabilities;
+        this.gridUrl = url;
     }
 
     @Override
     protected WebDriver create() {
         addArguments();
-        try {
-            return new RemoteWebDriver(new URI(gridUrl).toURL(), getCapabilities());
-        } catch (URISyntaxException | MalformedURLException e) {
-            LoggerUtils.logError(e.getMessage());
-            throw new RuntimeException(e.getMessage());
-        }
+        return new RemoteWebDriver(gridUrl, getCapabilities());
     }
 
     @Override
