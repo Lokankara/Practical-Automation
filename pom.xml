@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.softserve.com</groupId>
-    <artifactId>cross-browsers</artifactId>
+    <artifactId>explicit-implicit</artifactId>
     <version>1.0</version>
 
     <packaging>jar</packaging>
@@ -43,6 +43,7 @@
             <groupId>org.seleniumhq.selenium</groupId>
             <artifactId>selenium-java</artifactId>
             <version>4.21.0</version>
+<!--            <version>4.7.1</version>-->
             <scope>test</scope>
         </dependency>
 
@@ -50,25 +51,7 @@
             <groupId>io.github.bonigarcia</groupId>
             <artifactId>webdrivermanager</artifactId>
             <version>5.8.0</version>
-<!--            <version>4.4.3</version>-->
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>htmlunit-driver</artifactId>
-            <version>4.13.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-support</artifactId>
-            <version>4.15.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.codeborne</groupId>
-            <artifactId>phantomjsdriver</artifactId>
-            <version>1.5.0</version>
         </dependency>
 
         <!-- - - - - - Rest - - - - - -->
@@ -78,13 +61,6 @@
             <version>4.12.0</version>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/io.github.cdimascio/dotenv-java -->
-        <dependency>
-            <groupId>io.github.cdimascio</groupId>
-            <artifactId>dotenv-java</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-
         <!-- - - - - - Logging - - - - - -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -92,7 +68,6 @@
             <version>${org.slf4j.version}</version>
             <scope>compile</scope>
         </dependency>
-
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
@@ -103,12 +78,14 @@
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>
             <version>2.23.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
+            <artifactId>log4j-slf4j-impl</artifactId>
             <version>2.23.1</version>
         </dependency>
+
     </dependencies>
 
 
@@ -121,16 +98,9 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-resources-plugin</artifactId>
                 <version>3.3.1</version>
-                    <configuration>
-        			<resources>
-            			<resource>
-				            <directory>src/main/resources</directory>
-                			<includes>
-            			        <include>**/*.*</include>
-			                </includes>
-            			</resource>
-        			</resources>
-    			</configuration>
+                <configuration>
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
             </plugin>
 
             <plugin>
@@ -149,9 +119,6 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <includes>
-                        <include>**/*Test.java</include>
-                    </includes>
                     <systemPropertyVariables>
                         <surefire.application.password>
                             ${application.password}
@@ -159,6 +126,7 @@
                     </systemPropertyVariables>
                 </configuration>
             </plugin>
+
         </plugins>
     </build>
 

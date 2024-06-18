@@ -1,64 +1,106 @@
 package com.softserve.edu.runner;
 
-import com.softserve.edu.manager.Browsers;
-import com.softserve.edu.manager.DriverManager;
-import com.softserve.edu.reporter.LoggerUtils;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInfo;
+import org.junit.jupiter.api.TestInstance;
+import org.openqa.selenium.Cookie;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeOptions;
-import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.chrome.ChromeDriver;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.Date;
 
-import static com.softserve.edu.runner.BaseBrowserTest.TIME_TEMPLATE;
-
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BaseTest {
 
+    protected WebDriver driver;
+    protected JavascriptExecutor executor;
+    protected static final Long IMPLICITLY_WAIT_SECONDS = 5L;
+    protected static final String TIME_TEMPLATE = "yyyy-MM-dd_HH-mm-ss-S";
+    protected final Logger logger = LogManager.getLogger(BaseTest.class);
+
+    @AfterEach
+    public void afterEach(TestInfo testInfo) {
+        deleteCookie("dx-cookie-policy");
+        takeShot(testInfo);
+        clearStorage();
+    }
+
+    @BeforeAll
+    public void beforeAll() {
+        WebDriverManager.chromedriver().setup();
+        driver = new ChromeDriver();
+        driver.manage().window().maximize();
+        executor = (JavascriptExecutor) driver;
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICITLY_WAIT_SECONDS));
+    }
+
     @AfterAll
-    public static void tear() {
-        DriverManager.quitAll();
-        LoggerUtils.logPass("@AfterAll executed",
-                String.valueOf(Thread.currentThread().getName()));
+    public void afterAll() {
+        if (driver != null) {
+            deleteCookies();
+            closeDriver();
+        } else {
+            logger.warn("Driver closed");
+        }
     }
 
-    public WebDriver getWebDriver(Browsers browser) {
-        String threadName = Thread.currentThread().getName();
-        LoggerUtils.logInfo("Thread", threadName, browser.name());
-        return DriverManager.getWebDriver(browser);
+    protected void clearStorage() {
+        if (executor != null) {
+            executor.executeScript("window.localStorage.clear()");
+            executor.executeScript("window.sessionStorage.clear();");
+            logger.info("Local and session storage cleared.");
+        }
     }
 
-    public WebDriver getWebDriver(ChromeOptions options) {
-        String threadName = Thread.currentThread().getName();
-        LoggerUtils.logInfo("Thread", threadName, options.getBrowserName());
-        return DriverManager.getWebDriver(options);
+    protected void deleteCookie(String name) {
+        Cookie cookie = driver.manage().getCookieNamed(name);
+        if (cookie != null) {
+            driver.manage().deleteCookie(cookie);
+            logger.info("Cookie " + name + " deleted.");
+        }
     }
 
-    public WebDriver getWebDriver(EdgeOptions options) {
-        String threadName = Thread.currentThread().getName();
-        LoggerUtils.logInfo("Thread", threadName, options.getBrowserName());
-        return DriverManager.getWebDriver(options);
+    protected void deleteCookies() {
+        if (driver != null) {
+            driver.manage().deleteAllCookies();
+            logger.info("All cookies deleted.");
+        }
     }
 
-    public WebDriver getWebDriver(FirefoxOptions options) {
-        String threadName = Thread.currentThread().getName();
-        LoggerUtils.logInfo("Thread", threadName, options.getBrowserName());
-        return DriverManager.getWebDriver(options);
+    protected void closeDriver() {
+        if (driver != null) {
+            driver.quit();
+            driver = null;
+            logger.info("Driver closed.");
+        }
     }
 
-    protected void takeScreenShot(WebDriver driver) {
+    protected void takeShot(TestInfo testInfo) {
         String currentTime = new SimpleDateFormat(TIME_TEMPLATE).format(new Date());
         File scrFile = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+        String separator = System.getProperty("os.name").toLowerCase().contains("win") ? "\\" : "/";
+        String pathName = String.format(".%starget%sreports%s%s_%s_screenshot.png",
+                separator, separator, separator, currentTime, testInfo.getDisplayName());
         try {
-            FileUtils.copyFile(scrFile, new File("./target/reports/" + currentTime + "_screenshot.png"));
+            FileUtils.copyFile(scrFile, new File(pathName));
+            logger.info("Take shot: " +  testInfo.getDisplayName());
         } catch (IOException e) {
-            LoggerUtils.logFatal("Can`t take a ScreenShot", e.getMessage());
+            logger.error(e.getMessage());
+            Assertions.fail("Setup failed: " + e.getMessage());
         }
     }
 }
