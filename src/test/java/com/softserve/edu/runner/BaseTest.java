@@ -42,14 +42,8 @@ public abstract class BaseTest {
 
     @BeforeAll
     public void beforeAll() {
-        ChromeOptions chromeOptions = new ChromeOptions();
-        if ("true".equals(System.getenv("CI"))) {
-            chromeOptions.addArguments("--headless");
-            chromeOptions.addArguments("--no-sandbox");
-            chromeOptions.addArguments("--disable-dev-shm-usage");
-        }
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver(chromeOptions);
+        driver = new ChromeDriver();
         driver.manage().window().maximize();
         executor = (JavascriptExecutor) driver;
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICITLY_WAIT_SECONDS));

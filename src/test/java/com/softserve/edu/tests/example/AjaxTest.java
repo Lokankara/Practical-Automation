@@ -31,14 +31,6 @@ class AjaxTest extends BaseTest {
     private static final By NEVADA_IFRAME = By.xpath("//div[contains(@data-options,'remote-paging')]//iframe");
     private static final String BASE_URL = "https://devexpress.github.io/devextreme-reactive/react/grid/docs/guides/paging/";
 
-    @BeforeAll
-    public void beforeAll() {
-        WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICITLY_WAIT_SECONDS));
-        driver.manage().window().maximize();
-    }
-
     @AfterAll
     public void afterAll() {
         closeDriver();
