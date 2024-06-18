@@ -53,10 +53,10 @@ public abstract class BaseTest {
     public void afterAll() {
         if (driver != null) {
             deleteCookies();
-            closeDriver();
         } else {
             logger.warn("Driver closed");
         }
+        closeDriver();
     }
 
     protected void clearStorage() {
