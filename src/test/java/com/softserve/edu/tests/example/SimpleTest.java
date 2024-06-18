@@ -34,7 +34,6 @@ class SimpleTest extends BaseTest {
     private static final By FIRST_TEXT_CSS = By.cssSelector("div#demo > h2");
     private static final By NEXT_P_CSS = By.cssSelector("div#demo > h1 + p");
 
-
     @BeforeAll
     public void beforeAll() {
         WebDriverManager.chromedriver().setup();
