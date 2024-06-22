@@ -1,13 +1,9 @@
 package com.softserve.edu.example;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -17,13 +13,15 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class SimpleTest {
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+class SimpleTest {
     private static final String BASE_URL = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev/";
     private static final Long IMPLICITLY_WAIT_SECONDS = 10L;
-    private static WebDriver driver;
+    private WebDriver driver;
+    private JavascriptExecutor executor;
 
     @BeforeAll
-    public static void beforeAll() {
+    public void beforeAll() {
         WebDriverManager.chromedriver().setup();
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--headless");
@@ -35,10 +33,11 @@ public class SimpleTest {
         driver = new ChromeDriver(chromeOptions);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(IMPLICITLY_WAIT_SECONDS));
         driver.manage().window().maximize();
+        executor = (JavascriptExecutor) driver;
     }
 
     @AfterAll
-    public static void afterAll() {
+    public void afterAll() {
 
         if (driver != null) {
             driver.quit();
@@ -48,13 +47,12 @@ public class SimpleTest {
     @BeforeEach
     public void beforeEach() {
         driver.get(BASE_URL);
-
     }
 
     @AfterEach
     public void afterEach() {
-        // logout; clear cache; delete cookie; delete session;
-        // Save Screen;
+        executor.executeScript("window.localStorage.clear()");
+        executor.executeScript("window.sessionStorage.clear();");
     }
 
     @Test
@@ -82,7 +80,7 @@ public class SimpleTest {
         logOut();
     }
 
-    private static void login() {
+    private void login() {
         driver.findElement(By.id("basic_email")).click();
         driver.findElement(By.id("basic_email")).clear();
         driver.findElement(By.id("basic_email")).sendKeys("yagifij495@eqvox.com");
@@ -102,12 +100,12 @@ public class SimpleTest {
         logOut();
     }
 
-    private static void openLoginModal() {
+    private void openLoginModal() {
         driver.findElement(By.cssSelector("div.user-profile span.anticon.anticon-caret-down")).click();
         driver.findElement(By.cssSelector("li[data-menu-id*='login'] span.ant-dropdown-menu-title-content")).click();
     }
 
-    private static void logOut() {
+    private void logOut() {
         driver.findElement(By.cssSelector("div.user-profile span.anticon.anticon-caret-down")).click();
         new WebDriverWait(driver, Duration.ofSeconds(5L)).until(ExpectedConditions.elementToBeClickable(By.cssSelector("li[data-menu-id*='logout'] span.ant-dropdown-menu-title-content"))).click();
     }
