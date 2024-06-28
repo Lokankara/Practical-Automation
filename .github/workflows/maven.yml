@@ -42,32 +42,37 @@ jobs:
           sudo apt-get update && sudo apt-get install --yes --no-install-recommends postgresql-client
       - run: |
           psql -h localhost -U myuser -d example -c '
-            CREATE TABLE categories (
+            CREATE TABLE IF NOT EXISTS categories (
               id bigserial PRIMARY KEY,
               avatar varchar NOT NULL,
               title varchar NOT NULL UNIQUE
             );
-            CREATE TABLE club (
+            CREATE TABLE IF NOT EXISTS club (
               id bigserial PRIMARY KEY,
               title varchar NOT NULL,
               description varchar NOT NULL,
               image_url varchar,
               category_id int8 REFERENCES categories(id)
             );
-            CREATE TABLE child (
+            CREATE TABLE IF NOT EXISTS child (
               id bigserial PRIMARY KEY,
               first_name varchar NOT NULL,
               last_name varchar NOT NULL,
               birth_date date
             );
-            CREATE TABLE club_child (
+            CREATE TABLE IF NOT EXISTS club_child (
               club_id int8 REFERENCES club(id),
               child_id int8 REFERENCES child(id)
             );
           '
         env:
           PGPASSWORD: mypass
-      
+      - run: |
+          psql -h localhost -U myuser -d example -c '\dt'  # List tables to verify creation
+        env:
+          PGPASSWORD: mypass
+
+
 
       - uses: actions/checkout@v3
 
@@ -133,13 +138,13 @@ jobs:
             tracing/
             video/
 
-      - name: Dorny Test Reporter
-        uses: dorny/test-reporter@v1.9.1
-        if: success() || failure()
-        with:
-          name: Test Report for ${{ matrix.os }}
-          path: target/surefire-reports/TEST-*.xml
-          reporter: java-junit
+#      - name: Dorny Test Reporter
+#        uses: dorny/test-reporter@v1.9.1
+#        if: success() || failure()
+#        with:
+#          name: Test Report for ${{ matrix.os }}
+#          path: target/surefire-reports/TEST-*.xml
+#          reporter: java-junit
 
   check-java-code-style:
     name: Check Java code style
