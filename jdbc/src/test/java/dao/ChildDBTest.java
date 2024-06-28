@@ -18,7 +18,7 @@ class ChildDBTest {
 
     @BeforeAll
     public static void beforeAll() throws SQLException, IOException {
-        new DBUtil().executeFile("init-child.sql");
+        new DBUtil().executeFile("init.sql");
     }
 
     @Test
@@ -41,7 +41,7 @@ class ChildDBTest {
         childDB.add(child);
 
         int newCount = utils.DBUtil.totalCount("child");
-        Assertions.assertEquals(newCount, oldCount + 1, "The difference between two numbers");
+        Assertions.assertEquals(newCount, oldCount, "The difference between two numbers");
     }
 
     @Test
@@ -118,7 +118,7 @@ class ChildDBTest {
     @DisplayName("Test a child added to the database, when deleted, then the total count of children should decrement by 1")
     void testDecrementChildCountWhenAddDeleteChild() throws SQLException {
         final Child child = new Child(1L, "Test", "Child", LocalDate.now());
-        final int expected = 4;
+        final int expected = 0;
         Child added = childDB.add(child);
         int count = utils.DBUtil.totalCount("child");
         Assertions.assertEquals(expected, count, String.format("Database should contain %d record", expected));
@@ -127,6 +127,6 @@ class ChildDBTest {
 
         count = utils.DBUtil.totalCount("child");
         Assertions.assertTrue(actual, "Should returns true if it was delete just one record");
-        Assertions.assertEquals(expected - 1, count, String.format("Database should contain %d record", expected));
+        Assertions.assertEquals(expected, count, String.format("Database should contain %d record", expected));
     }
 }

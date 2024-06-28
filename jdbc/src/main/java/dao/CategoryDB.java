@@ -21,11 +21,7 @@ public class CategoryDB {
     }
 
     public CategoryDB() {
-        try {
-            conn = DBUtil.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        conn = DBUtil.getConnection();
     }
 
     public Category add(Category category) {
@@ -45,7 +41,7 @@ public class CategoryDB {
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-    }
+        }
         return null;
     }
 

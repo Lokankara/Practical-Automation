@@ -12,18 +12,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ChildDB {
-    private Connection conn;
+    private final Connection conn;
 
     public ChildDB(Connection conn) {
         this.conn = conn;
     }
 
     public ChildDB()  {
-        try {
-            conn = DBUtil.getConnection();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        conn = DBUtil.getConnection();
     }
 
     public Child add(Child child) throws SQLException {
