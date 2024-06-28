@@ -4,7 +4,7 @@ on:
   push:
     branches: [ "master", "dev" ]
   pull_request:
-    branches: [ "master", "dev" ]
+    branches: [ "master" ]
 
 permissions:
   contents: write
@@ -14,11 +14,78 @@ permissions:
   checks: write
 
 jobs:
-  build:
-
+  Test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    services:
+      postgres:
+        image: postgres
+
+        env:
+          POSTGRES_PASSWORD: mypass
+          POSTGRES_USER: myuser
+          POSTGRES_DB: example
+
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
 
     steps:
+      - run: |
+          sudo apt-get update && sudo apt-get install --yes --no-install-recommends postgresql-client
+      - run: |
+          ls -lah ${{ github.workspace }}
+      - run: |
+          psql -h localhost -U myuser -d example -c '
+            DROP TABLE IF EXISTS categories CASCADE;
+            DROP TABLE IF EXISTS club_child;
+            DROP TABLE IF EXISTS child;
+            DROP TABLE IF EXISTS club;
+            
+            CREATE TABLE IF NOT EXISTS categories (
+            id bigserial primary key,
+            avatar varchar not null,
+            title varchar not null unique
+            );
+            
+            CREATE TABLE IF NOT EXISTS club
+            (
+            id          bigserial primary key,
+            title       varchar not null,
+            description varchar not null,
+            image_url   varchar,
+            category_id int8 references categories (id)
+            );
+            
+            CREATE TABLE IF NOT EXISTS child
+            (
+            id         bigserial primary key,
+            first_name varchar not null,
+            last_name  varchar not null,
+            birth_date date
+            );
+            
+            CREATE TABLE IF NOT EXISTS club_child
+            (
+            club_id  int8 references club (id),
+            child_id int8 references child (id)
+            );            
+          '
+        env:
+          PGPASSWORD: mypass
+      - run: |
+          psql -h localhost -U myuser -d example -c '\dt'
+        env:
+          PGPASSWORD: mypass
+
+
       - uses: actions/checkout@v4
       - name: Set up JDK 17
         uses: actions/setup-java@v3
@@ -48,13 +115,30 @@ jobs:
             tracing/
             video/
 
-      - name: Dorny Test Reporter
-        uses: dorny/test-reporter@v1.9.1
+      - name: Generate JaCoCo Report
+        run: mvn jacoco:report
         if: success() || failure()
+
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v4
         with:
-          name: Test Report for ${{ matrix.os }}
-          path: target/surefire-reports/TEST-*.xml
-          reporter: java-junit
+          report_paths: '**/target/surefire-reports/TEST-*.xml'
+        if: success() || failure()
+
+      - name: Upload JaCoCo Report
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: '**/target/site/jacoco/'
+        if: success() || failure()
+
+  #      - name: Dorny Test Reporter
+  #        uses: dorny/test-reporter@v1.9.1
+  #        if: success() || failure()
+  #        with:
+  #          name: Test Report for ${{ matrix.os }}
+  #          path: target/surefire-reports/TEST-*.xml
+  #          reporter: java-junit
 
   check-java-code-style:
     name: Check Java code style
@@ -74,4 +158,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: 'github-pr-check'
           tool_name: 'Checkstyle'
-          workdir: 'src/test/java/com/softserve/edu'
