@@ -92,6 +92,6 @@ class CategoryDBTest {
 
         assertNotNull(children);
         assertEquals(1, children.size());
-        assertEquals(child, children.getFirst());
+        assertEquals(child, children.get(0));
     }
 }

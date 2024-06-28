@@ -77,7 +77,7 @@ class ChildDBTest {
         List<Child> children = childDB.allAtLeastAge(6);
 
         Assertions.assertEquals(1, children.size());
-        Assertions.assertEquals(child2.firstName(), children.getFirst().firstName());
+        Assertions.assertEquals(child2.firstName(), children.get(0).firstName());
     }
 
     @Test
@@ -90,7 +90,7 @@ class ChildDBTest {
         List<Child> children = childDB.allWithoutBirthDate(0);
 
         Assertions.assertEquals(1, children.size());
-        Assertions.assertEquals(child2.firstName(), children.getFirst().firstName());
+        Assertions.assertEquals(child2.firstName(), children.get(0).firstName());
     }
 
     @Test
