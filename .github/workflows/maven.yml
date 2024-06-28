@@ -37,24 +37,24 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
 
-      - name: Attach screenshots and reports
-        uses: actions/upload-artifact@v3
-        if: failure()
-        with:
-          name: screenshots-and-report
-          path: |
-            screenshots/
-            **/surefire-reports/emailable-report.html
-            tracing/
-            video/
-
-      - name: Dorny Test Reporter
-        uses: dorny/test-reporter@v1.9.1
-        if: success() || failure()
-        with:
-          name: Test Report for ${{ matrix.os }}
-          path: target/surefire-reports/TEST-*.xml
-          reporter: java-junit
+#      - name: Attach screenshots and reports
+#        uses: actions/upload-artifact@v3
+#        if: failure()
+#        with:
+#          name: screenshots-and-report
+#          path: |
+#            screenshots/
+#            **/surefire-reports/emailable-report.html
+#            tracing/
+#            video/
+#
+#      - name: Dorny Test Reporter
+#        uses: dorny/test-reporter@v1.9.1
+#        if: success() || failure()
+#        with:
+#          name: Test Report for ${{ matrix.os }}
+#          path: target/surefire-reports/TEST-*.xml
+#          reporter: java-junit
 
   check-java-code-style:
     name: Check Java code style
