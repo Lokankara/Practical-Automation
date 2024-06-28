@@ -10,7 +10,7 @@ public class DBUtil {
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
-                "jdbc:postgresql://oregon-postgres.render.com/selenium", "admin", "xsy0WYIZQm8W2qgTQH0FK5lJaln4ZJwk"
+                "jdbc:postgresql://oregon-postgres.render.com/selenium_j1pm", "admin", "WKb5NQQAGwOs50zb3kroalITQqoFsnhY"
         );
     }
 }
