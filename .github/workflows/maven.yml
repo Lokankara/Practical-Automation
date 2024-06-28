@@ -42,11 +42,19 @@ jobs:
           sudo apt-get update && sudo apt-get install --yes --no-install-recommends postgresql-client
       - run: |
           psql -h localhost -U myuser -d example -c '
+            -- Drop tables in reverse order to avoid foreign key constraints
+            DROP TABLE IF EXISTS club_child;
+            DROP TABLE IF EXISTS child;
+            DROP TABLE IF EXISTS club;
+            DROP TABLE IF EXISTS categories CASCADE;  -- CASCADE to drop dependent tables
+
+            -- Create tables in the correct order
             CREATE TABLE IF NOT EXISTS categories (
               id bigserial PRIMARY KEY,
               avatar varchar NOT NULL,
               title varchar NOT NULL UNIQUE
             );
+
             CREATE TABLE IF NOT EXISTS club (
               id bigserial PRIMARY KEY,
               title varchar NOT NULL,
@@ -54,12 +62,14 @@ jobs:
               image_url varchar,
               category_id int8 REFERENCES categories(id)
             );
+
             CREATE TABLE IF NOT EXISTS child (
               id bigserial PRIMARY KEY,
               first_name varchar NOT NULL,
               last_name varchar NOT NULL,
               birth_date date
             );
+
             CREATE TABLE IF NOT EXISTS club_child (
               club_id int8 REFERENCES club(id),
               child_id int8 REFERENCES child(id)
@@ -68,10 +78,9 @@ jobs:
         env:
           PGPASSWORD: mypass
       - run: |
-          psql -h localhost -U myuser -d example -c '\dt'  # List tables to verify creation
+          psql -h localhost -U myuser -d example -c '\dt'
         env:
           PGPASSWORD: mypass
-
 
 
       - uses: actions/checkout@v3
