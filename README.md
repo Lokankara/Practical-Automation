@@ -1,4 +1,7 @@
 ## Practical Automation
+[Link](https://github.com/Lokankara/Practical-Automation/)
+
+[![Java CI with Maven](https://github.com/Lokankara/Practical-Automation/actions/workflows/maven.yml/badge.svg)](https://github.com/Lokankara/Practical-Automation/actions/workflows/maven.yml)
 
 ### Maven commands
 

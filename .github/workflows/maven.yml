@@ -74,4 +74,3 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           reporter: 'github-pr-check'
           tool_name: 'Checkstyle'
-          workdir: 'src/test/java/com/softserve/edu'
