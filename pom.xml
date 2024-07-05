@@ -15,6 +15,7 @@
         <module>oop</module>
         <module>string</module>
         <module>jdbc</module>
+        <module>reporting</module>
     </modules>
 
     <properties>
