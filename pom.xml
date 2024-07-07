@@ -17,6 +17,7 @@
         <module>jdbc</module>
         <module>reporting</module>
         <module>params</module>
+        <module>stabbing</module>
     </modules>
 
     <properties>
