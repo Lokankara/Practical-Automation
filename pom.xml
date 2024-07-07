@@ -20,6 +20,7 @@
         <module>stabbing</module>
         <module>webdriver</module>
         <module>css-selector</module>
+        <module>xpath</module>
     </modules>
 
     <properties>
