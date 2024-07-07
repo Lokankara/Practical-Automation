@@ -8,20 +8,19 @@
     </parent>
 
     <groupId>com.softserve.edu</groupId>
-    <artifactId>page-object</artifactId>
+    <artifactId>factory</artifactId>
     <packaging>jar</packaging>
 
-    <name>page-object</name>
+    <name>factory</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java.version>17</java.version>
         <org.slf4j.version>2.0.13</org.slf4j.version>
-        <!-- - - - - - Password - - - - - -->
-        <application.password>null123</application.password>
+        <dotenv-java.version>3.0.0</dotenv-java.version>
+        <commons-io.version>2.16.1</commons-io.version>
     </properties>
-
 
     <dependencies>
 
@@ -33,25 +32,6 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>htmlunit-driver</artifactId>
-            <version>4.13.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>com.codeborne</groupId>
-            <artifactId>phantomjsdriver</artifactId>
-            <version>1.5.0</version>
-        </dependency>
-
-        <!-- - - - - - Rest - - - - - -->
-        <dependency>
-            <groupId>com.squareup.okhttp3</groupId>
-            <artifactId>okhttp</artifactId>
-            <version>4.12.0</version>
-        </dependency>
 
         <!-- - - - - - Logging - - - - - -->
         <dependency>
@@ -67,11 +47,21 @@
             <version>${org.slf4j.version}</version>
             <scope>runtime</scope>
         </dependency>
+
         <dependency>
-            <groupId>com.opencsv</groupId>
-            <artifactId>opencsv</artifactId>
-            <version>5.5.2</version>
+            <groupId>io.github.cdimascio</groupId>
+            <artifactId>dotenv-java</artifactId>
+            <version>${dotenv-java.version}</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
+
+
     </dependencies>
 
 
@@ -104,13 +94,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
-                <configuration>
-                    <systemPropertyVariables>
-                        <surefire.application.password>
-                            ${application.password}
-                        </surefire.application.password>
-                    </systemPropertyVariables>
-                </configuration>
             </plugin>
 
         </plugins>

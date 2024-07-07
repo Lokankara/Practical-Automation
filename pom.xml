@@ -24,6 +24,7 @@
         <module>ajax</module>
         <module>page</module>
         <module>page-object</module>
+        <module>factory</module>
     </modules>
 
     <properties>
@@ -52,6 +53,12 @@
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.10.2</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>5.8.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
