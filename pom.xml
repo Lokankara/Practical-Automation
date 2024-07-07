@@ -16,6 +16,7 @@
         <module>string</module>
         <module>jdbc</module>
         <module>reporting</module>
+        <module>params</module>
     </modules>
 
     <properties>

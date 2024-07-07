@@ -1,0 +1,8 @@
+table,column,type
+categories,avatar,character varying
+categories,title,character varying
+clubs,title,character varying
+clubs,description,character varying
+clubs,image_url,character varying
+children,first_name,character varying
+children,last_name,character varying
