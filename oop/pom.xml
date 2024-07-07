@@ -10,12 +10,10 @@
     <groupId>com.softserve.edu</groupId>
     <artifactId>oop</artifactId>
     <packaging>jar</packaging>
-
     <name>oop</name>
     <url>http://maven.apache.org</url>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-
 </project>
