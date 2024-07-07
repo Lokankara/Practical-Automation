@@ -46,8 +46,8 @@ public class SomeTest extends TestRunner {
     @Feature("Smoke Tests")
     @Severity(SeverityLevel.NORMAL)
     @Story("Verify basic navigation")
-    @DisplayName("Check Smoke Test")
-    @Description("Verify basic functionality on the home page")
+    @DisplayName("Verify basic functionality on the home page")
+    @Description("Verify navigation through application pages and check teach label text")
     @Link(name = "Website", url = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev/")
     public void checkSmoke() {
         Allure.step("Load application and navigate through pages", () -> {
@@ -57,10 +57,12 @@ public class SomeTest extends TestRunner {
                     .gotoAboutUsPage()
                     .gotoUkrainianServicePage()
                     .gotoHomePage();
-            presentationSleep();
-            Allure.step("Check that the teach label text contains the expected message", () ->
-                    Assertions.assertTrue(homePage.getTeachLabelText().contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE),
-                            "Expected teach label text to contain: " + HomePage.BEGIN_TEACH_LABEL_MESSAGE));
+
+            Allure.step("Expected result: Verify that the teach label text contains the expected message" + HomePage.BEGIN_TEACH_LABEL_MESSAGE, () -> {
+                String teachLabelText = homePage.getTeachLabelText();
+                Assertions.assertTrue(teachLabelText.contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE),
+                        "Expected teach label text to contain: " + HomePage.BEGIN_TEACH_LABEL_MESSAGE);
+            });
         });
     }
 
@@ -69,7 +71,7 @@ public class SomeTest extends TestRunner {
                 Arguments.of(UserRepository.get().customer())
         );
     }
-    
+
     @Owner("Lokankara")
     @Story("User login")
     @Epic("Web interface")
@@ -89,26 +91,21 @@ public class SomeTest extends TestRunner {
                     .openLoginModal()
                     .successfulLogin(email, password);
 
-            final HomePage finalHomePage = homePage;
-
-            Allure.step("Verify pop-up message after login", () -> {
-                String popupMessage = finalHomePage.getPopupMessageLabelText();
-                presentationSleep();
+            Allure.step("Expected result: Verify pop-up message after login - Expected: " + TopPart.POPUP_MESSAGE_SUCCESSFULLY, () -> {
+                String popupMessage = homePage.getPopupMessageLabelText();
                 Assertions.assertEquals(TopPart.POPUP_MESSAGE_SUCCESSFULLY, popupMessage,
                         "Expected pop-up message: " + TopPart.POPUP_MESSAGE_SUCCESSFULLY);
             });
 
-            Allure.step("Verify teach label text after login", () -> {
-                Assertions.assertTrue(finalHomePage.getTeachLabelText().contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE),
+            Allure.step("Expected result: Verify teach label text after login - Expected to contain: " + HomePage.BEGIN_TEACH_LABEL_MESSAGE, () -> {
+                Assertions.assertTrue(homePage.getTeachLabelText().contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE),
                         "Expected teach label text to contain: " + HomePage.BEGIN_TEACH_LABEL_MESSAGE);
-                presentationSleep();
             });
 
-            HomePage signedOutHomePage = finalHomePage.signOutUser();
+            HomePage signedOutHomePage = homePage.signOutUser();
 
-            Allure.step("Verify user is logged out", () -> {
+            Allure.step("Expected result: Sign out user and verify user is logged out - Expected: User is logged out", () -> {
                 Assertions.assertFalse(signedOutHomePage.isUserLogged(), "Expected user to be logged out");
-                presentationSleep();
             });
         });
     }
@@ -135,12 +132,10 @@ public class SomeTest extends TestRunner {
                     .openLoginModal()
                     .unsuccessfulLoginPage(user.getEmail(), user.getPassword());
             String popupMessage = loginModal.getPopupMessageLabelText();
-            presentationSleep();
 
-            Allure.step("Check pop-up message", () ->
+            Allure.step("Expected result: Check pop-up message: " + LoginModal.POPUP_MESSAGE_UNSUCCESSFULLY, () ->
                     Assertions.assertEquals(LoginModal.POPUP_MESSAGE_UNSUCCESSFULLY, popupMessage,
                             "Expected pop-up message: " + LoginModal.POPUP_MESSAGE_UNSUCCESSFULLY));
-            presentationSleep();
         });
     }
 
@@ -166,17 +161,16 @@ public class SomeTest extends TestRunner {
                     .gotoChallengePage(challengeName, ChallengeTeachPage.class)
                     .gotoYoutubeFrame()
                     .playVideoContent();
-            presentationSleep(4);
 
-            Allure.step("Check YouTube frame content", () ->
+            Allure.step("Expected result: Check YouTube frame content - Expected to contain: " + urlContents.getSearchVideo(), () ->
                     Assertions.assertTrue(youtubeFrame.getYoutubeLinkText().contains(urlContents.getSearchVideo()),
                             "Expected YouTube link text to contain: " + urlContents.getSearchVideo()));
-            presentationSleep();
 
-            HomePage homePage = youtubeFrame
-                    .gotoChallengeTeachPage()
-                    .gotoHomePage();
-            presentationSleep(4);
+            Allure.step("Navigate back to challenge teach page and then to home page", () -> {
+                HomePage homePage = youtubeFrame
+                        .gotoChallengeTeachPage()
+                        .gotoHomePage();
+            });
         });
     }
 
@@ -198,14 +192,18 @@ public class SomeTest extends TestRunner {
     @Description("Verify city-specific club details")
     @Link(name = "Website", url = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev/")
     public void checkCityClubs(Cities city) {
-        ClubComponent ClubComponent = loadApplication()
-                .gotoClubPage()
-                .chooseCity(city)
-                .getClubContainer()
-                .getFirstClubComponent();
+        Allure.step("Load application and navigate to club page", () -> {
+            ClubComponent clubComponent = loadApplication()
+                    .gotoClubPage()
+                    .chooseCity(city)
+                    .getClubContainer()
+                    .getFirstClubComponent();
 
-        Assertions.assertTrue(ClubComponent.getAddressLabelText().contains(city.getCity()));
-        presentationSleep();
+            Allure.step("Expected result: Verify club address contains city name - Expected: " + city.getCity(), () -> {
+                Assertions.assertTrue(clubComponent.getAddressLabelText().contains(city.getCity()),
+                        "Actual club address: " + clubComponent.getAddressLabelText());
+            });
+        });
     }
 
     private static Stream<Arguments> clubProvider() {
@@ -234,10 +232,9 @@ public class SomeTest extends TestRunner {
                     .getClubContainer()
                     .getClubComponentByPartialTitle(finalClubContents.getTitle());
 
-            Allure.step("Check club title", () ->
+            Allure.step("Expected result: Check club title - Expected to contain: " + finalClubContents.getTitle(), () ->
                     Assertions.assertTrue(clubComponent.getTitleLinkText().contains(finalClubContents.getTitle()),
-                            "Expected club title to contain: " + finalClubContents.getTitle()));
-            presentationSleep();
+                            "Actual club title: " + clubComponent.getTitleLinkText()));
         });
     }
 
@@ -259,10 +256,9 @@ public class SomeTest extends TestRunner {
                     .chooseCity(finalClubContents.getCity())
                     .gotoAdvancedClubPage();
 
-            Allure.step("Check if club exists by title in advanced search", () ->
+            Allure.step("Expected result: Check club existence in advanced search with title: " + finalClubContents.getTitle(), () ->
                     Assertions.assertTrue(advancedClubPage.isExistClubByPartialTitle(finalClubContents.getTitle()),
                             "Expected club to exist in advanced search with title: " + finalClubContents.getTitle()));
-            presentationSleep();
         });
     }
 
@@ -293,11 +289,10 @@ public class SomeTest extends TestRunner {
                     .getClubComponentByPartialTitle(finalClubContents.getTitle())
                     .openClubDetailsPage();
 
-            Allure.step("Check if comment exists by author in club details", () ->
+            Allure.step("Expected result: Check comment existence by author: " + finalCommentContents.getAuthor(), () ->
                     Assertions.assertTrue(clubDetailsPage.getCommentsContainer()
                                     .isExistClubComponentByPartialAuthor(finalCommentContents.getAuthor()),
                             "Expected comment to exist by author: " + finalCommentContents.getAuthor()));
-            presentationSleep();
         });
     }
 }

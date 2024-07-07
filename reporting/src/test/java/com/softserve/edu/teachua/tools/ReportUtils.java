@@ -13,10 +13,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
 public final class ReportUtils {
+
     private static final Logger logger = LoggerFactory.getLogger(ReportUtils.class);
 
     private ReportUtils() {
@@ -48,14 +47,6 @@ public final class ReportUtils {
         Allure.addAttachment("Error", "text/plain", error);
     }
 
-    public static void attachScreenshot(byte[] screenshotBytes) {
-        Allure.addAttachment("Screenshot", new ByteArrayInputStream(screenshotBytes));
-    }
-
-    public static void attachPageSource(String pageSource) {
-        Allure.addAttachment("Page Source", "text/plain", pageSource);
-    }
-
     public static void attachFile(String name, Path path) {
         try (InputStream is = Files.newInputStream(path)) {
             byte[] content = is.readAllBytes();
@@ -65,10 +56,8 @@ public final class ReportUtils {
         }
     }
 
-    @Step("Info: {message}")
     public static void logInfo(String message) {
         logger.info(message);
-        Allure.addAttachment("Message", "text/plain", message);
     }
 
     public static void logBrowserDetails(WebDriver driver) {

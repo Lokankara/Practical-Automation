@@ -21,8 +21,8 @@ public class DropdownComponent {
     }
 
     private void initElements(By searchLocator) {
-        listOptions = search.webElements(searchLocator);
         ReportUtils.logInfo("Initialized listOptions with searchLocator: " + searchLocator);
+        listOptions = search.webElements(searchLocator);
     }
 
     public List<WebElement> getListOptions() {

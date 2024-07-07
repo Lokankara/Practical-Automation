@@ -30,22 +30,25 @@ public class SearchImplicit extends Search {
 
     @Override
     protected WebElement getWebElement(By by) {
+        ReportUtils.logInfo("Finding web element by: " + by.toString());
         return DriverUtils.getDriver().findElement(by);
     }
 
     @Override
     protected WebElement getWebElement(By by, WebElement fromWebElement) {
+        ReportUtils.logInfo("Finding web element by: " + by.toString() + " from parent element");
         return fromWebElement.findElement(by);
     }
 
     @Override
     protected List<WebElement> getWebElements(By by) {
+        ReportUtils.logInfo("Finding list of web elements by: " + by.toString());
         return DriverUtils.getDriver().findElements(by);
     }
 
     @Override
     protected List<WebElement> getWebElements(By by, WebElement fromWebElement) {
+        ReportUtils.logInfo("Finding list of nested web elements by: " + by.toString() + " from parent element");
         return fromWebElement.findElements(by);
     }
-
 }

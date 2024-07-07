@@ -1,9 +1,5 @@
 package com.softserve.edu.teachua.wraps.search;
 
-//
-// Factory Method Pattern
-//
-
 interface Strategy {
     Search getStrategy();
 }
@@ -41,7 +37,7 @@ public enum Strategies {
 
     private Strategy strategy;
 
-    private Strategies(Strategy strategy) {
+    Strategies(Strategy strategy) {
         this.strategy = strategy;
     }
 

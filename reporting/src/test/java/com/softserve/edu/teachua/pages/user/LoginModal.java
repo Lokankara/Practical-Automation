@@ -115,11 +115,11 @@ public class LoginModal {
     }
 
     public void fillLogin(String email, String password) {
-        ReportUtils.logAction("Filling login with email: " + email + " and password");
+        ReportUtils.logAction("Filling login with email: " + email + " and password " + password);
         enterEmailInput(email);
         enterPasswordInput(password);
         clickSignInButton();
-        ReportUtils.logInfo("Filled login with email: " + email + " and password");
+        ReportUtils.logInfo("Filled login with email: " + email + " and password " + password);
     }
 
     public String getPopupMessageLabelText() {
@@ -134,7 +134,7 @@ public class LoginModal {
         }
 
         String labelText = popupMessageLabel.get(0).getText();
-        ReportUtils.logInfo("Got popup message label text: " + labelText);
+        ReportUtils.logInfo("Getting popup message label text: " + labelText);
         return labelText;
     }
 

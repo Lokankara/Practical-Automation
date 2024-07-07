@@ -155,7 +155,7 @@ public class ClubsContainer {
             ReportUtils.logError("Club partial title not found: " + partialTitle);
             throw new RuntimeException("Club partialTitle: " + partialTitle + " not Found.");
         }
-        ReportUtils.logInfo("Found club component by partial title: " + partialTitle);
+        ReportUtils.logAction("Found club component by partial title: " + partialTitle);
         return result;
     }
 

@@ -45,6 +45,7 @@ public final class DriverUtils {
             ReportUtils.logAction(Browsers.DEFAULT_TEMPORARY.toString());
         } else {
             defaultBrowser = getBrowserByPartialName(browserName);
+            ReportUtils.logAction("Initializing driver with browser: " + defaultBrowser.toString());
         }
     }
 
@@ -66,11 +67,13 @@ public final class DriverUtils {
     }
 
     public static WebDriver addDriverByPartialName(String browserName) {
+        ReportUtils.logInfo("Added driver for browser by partial name: " + browserName);
         return addDriver(getBrowserByPartialName(browserName));
     }
 
     public static WebDriver addDriver(Browsers browser) {
         drivers.put(Thread.currentThread().getId(), browser.runBrowser());
+        ReportUtils.logInfo("Added driver for browser: " + browser);
         return drivers.get(Thread.currentThread().getId());
     }
     
@@ -78,7 +81,9 @@ public final class DriverUtils {
         WebDriver driver = drivers.get(Thread.currentThread().getId());
         if (driver == null) {
             driver = addDriver(defaultBrowser);
+            ReportUtils.logInfo("Initialized driver with default browser: " + defaultBrowser.toString());
         }
+        ReportUtils.logInfo("Retrieving driver");
         return driver;
     }
 

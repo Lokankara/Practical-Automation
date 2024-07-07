@@ -62,7 +62,6 @@ public abstract class TestRunner {
 
     protected HomePage loadApplication() {
         String baseUrl = UrlUtils.getBaseUrl();
-        ReportUtils.logAction("Loading application at URL: " + baseUrl);
         DriverUtils.getUrl(baseUrl);
         ReportUtils.logAction("Application loaded successfully at URL: " + baseUrl);
         return new HomePage();

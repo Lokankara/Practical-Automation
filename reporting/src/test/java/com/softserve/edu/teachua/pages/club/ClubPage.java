@@ -17,7 +17,7 @@ public class ClubPage extends TopSearchPart {
     }
 
     public ClubsContainer getClubContainer() {
-        ReportUtils.logInfo("get Club Container");
+        ReportUtils.logAction("get Club Container");
         return clubsContainer;
     }
 
