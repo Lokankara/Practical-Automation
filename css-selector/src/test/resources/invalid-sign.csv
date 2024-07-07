@@ -1,0 +1,9 @@
+email,password,lastName,firstName,phone,message
+nipibaw191@fresec.com,1,Took,Peregrin,0123456789,Пароль не може бути коротшим
+nipibaw191@fresec.com,Secret123!,1,Peregrin,0123456789,Прізвище не може містити цифри
+nipibaw191@fresec.com,Secret123!,Took,2,0123456789,Ім`я не може містити цифри
+nipibaw191@fresec.com,Secret123!,Took,Peregrin,1,Телефон не відповідає вказаному формату
+nipibaw191@fresec.com,Secret123!,Took,Peregrin,abc,Телефон не може містити літери
+nipibaw191@fresec.com,Secret123,Took,Peregrin,0123456789,Пароль повинен містити хоча б один спец. символ
+nipibaw191@fresec.com,Secrets!,Took,Peregrin,0123456789,Пароль повинен містити хоча б одну цифру
+nipibaw191@fresec.com,secret123!,Took,Peregrin,0123456789,Пароль повинен містити хоча б одну велику літеру

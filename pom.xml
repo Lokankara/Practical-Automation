@@ -19,6 +19,7 @@
         <module>params</module>
         <module>stabbing</module>
         <module>webdriver</module>
+        <module>css-selector</module>
     </modules>
 
     <properties>
