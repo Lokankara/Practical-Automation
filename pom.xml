@@ -25,6 +25,7 @@
         <module>page</module>
         <module>page-object</module>
         <module>factory</module>
+        <module>cross-browser</module>
     </modules>
 
     <properties>
