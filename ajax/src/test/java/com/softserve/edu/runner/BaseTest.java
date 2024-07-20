@@ -1,6 +1,7 @@
 package com.softserve.edu.runner;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
+import lombok.Getter;
 import org.apache.commons.io.FileUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +17,7 @@ import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.File;
 import java.io.IOException;
@@ -26,6 +28,7 @@ import java.util.Date;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class BaseTest {
 
+    @Getter
     private WebDriver driver;
     protected JavascriptExecutor executor;
     public static final Long IMPLICITLY_WAIT_SECONDS = 5L;
@@ -42,7 +45,16 @@ public abstract class BaseTest {
     @BeforeAll
     public void beforeAll() {
         WebDriverManager.chromedriver().setup();
-        driver = new ChromeDriver();
+        ChromeOptions chromeOptions = new ChromeOptions();
+        if ("true".equals(System.getenv("CI"))) {
+            chromeOptions.addArguments("--headless");
+            chromeOptions.addArguments("--incognito");
+            chromeOptions.addArguments("--no-sandbox");
+            chromeOptions.addArguments("--disable-gpu");
+            chromeOptions.addArguments("--disable-web-security");
+            chromeOptions.addArguments("--disable-dev-shm-usage");
+        }
+        driver = new ChromeDriver(chromeOptions);
         driver.manage().window().maximize();
         executor = (JavascriptExecutor) driver;
         driver.manage().timeouts().implicitlyWait(Duration.ZERO);
@@ -56,10 +68,6 @@ public abstract class BaseTest {
         } else {
             logger.warn("Driver closed");
         }
-    }
-
-    public WebDriver getDriver() {
-        return driver;
     }
 
     protected void clearStorage() {
