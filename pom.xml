@@ -27,6 +27,7 @@
         <module>factory</module>
         <module>cross-browser</module>
         <module>pattern</module>
+        <module>rest</module>
     </modules>
 
     <properties>

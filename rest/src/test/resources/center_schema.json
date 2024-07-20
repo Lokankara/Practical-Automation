@@ -1,0 +1,28 @@
+{
+  "title": "Root",
+  "type": "object",
+  "required": [
+    "id",
+    "name",
+    "socialLinks",
+    "user"
+  ],
+  "properties": {
+    "id": {
+      "type": "integer"
+    },
+    "name": {
+      "type": "string"
+    },
+    "socialLinks": {
+      "type": [
+        "array",
+        "null"
+      ]
+    },
+    "user": {
+      "type": "object"
+    }
+  }
+}
+

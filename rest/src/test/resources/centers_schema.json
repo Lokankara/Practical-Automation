@@ -1,0 +1,31 @@
+{
+  "title": "Root",
+  "type": "array",
+  "items":{
+    "type": "object",
+    "required": [
+      "id",
+      "name",
+      "description",
+      "email"
+    ],
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "names": {
+        "type": "string"
+      },
+      "description": {
+        "type": "string"
+      },
+      "email": {
+        "type": ["string", "null"]
+      },
+      "date": {
+        "type": "object"
+      }
+    }
+  }
+
+}

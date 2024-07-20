@@ -1,0 +1,28 @@
+{
+  "title": "Root",
+  "type": "array",
+  "items":{
+    "type": "object",
+    "required": [
+      "id",
+      "name",
+      "latitude",
+      "longitude"
+    ],
+    "properties": {
+      "id": {
+        "type": "integer"
+      },
+      "name": {
+        "type": "string"
+      },
+      "latitude": {
+        "type": "number"
+      },
+      "longitude": {
+        "type": "number"
+      }
+    }
+  }
+
+}
