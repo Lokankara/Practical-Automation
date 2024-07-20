@@ -16,10 +16,8 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <postgresql>42.7.1</postgresql>
         <junit.jupiter>5.10.2</junit.jupiter>
         <surefire-plugin>3.2.5</surefire-plugin>
-        <hikari>5.1.0</hikari>
         <sl4j>2.0.12</sl4j>
         <jacoco.version>0.8.10</jacoco.version>
         <assertj-core>3.25.3</assertj-core>
@@ -27,28 +25,11 @@
     </properties>
 
     <dependencies>
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
-        <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql}</version>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/org.assertj/assertj-core -->
         <dependency>
             <groupId>org.assertj</groupId>
             <artifactId>assertj-core</artifactId>
             <version>${assertj-core}</version>
             <scope>test</scope>
-        </dependency>
-
-
-        <!-- https://mvnrepository.com/artifact/com.zaxxer/HikariCP -->
-        <dependency>
-            <groupId>com.zaxxer</groupId>
-            <artifactId>HikariCP</artifactId>
-            <version>${hikari}</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->

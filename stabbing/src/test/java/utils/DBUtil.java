@@ -1,7 +1,6 @@
 package utils;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -13,22 +12,32 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class DBUtil {
-    public static Connection getConnection() throws SQLException {
-        String rootPath = Thread.currentThread().getContextClassLoader().getResource("").getPath();
-        String appConfigPath = rootPath + "db.properties";
 
-        Properties props = new Properties();
-        try {
-            props.load(new FileInputStream(appConfigPath));
+    private static Connection connection;
+
+    public DBUtil() {
+        if (connection == null) {
+            try {
+                connection = getConnection();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    public static Connection getConnection() throws SQLException {
+        try (InputStream input = DBUtil.class.getClassLoader().getResourceAsStream("db.properties")) {
+
+            Properties prop = new Properties();
+            prop.load(input);
+            return DriverManager
+                    .getConnection(
+                            String.format("jdbc:postgresql://%s:%s/%s", prop.getProperty("hostname"), prop.getProperty("port"),
+                                    prop.getProperty("db.name")),
+                            prop.getProperty("db.user"), prop.getProperty("db.password"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        String url = props.getProperty("jdbcUrl");
-        String username = props.getProperty("dataSource.user");
-        String password = props.getProperty("dataSource.password");
-
-        return DriverManager
-                .getConnection(url, username, password);
     }
 
     public static int executeStatement(String query) throws SQLException {

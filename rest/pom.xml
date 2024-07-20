@@ -25,7 +25,6 @@
         <rest-assured.version>5.5.0</rest-assured.version>
     </properties>
 
-
     <dependencies>
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
