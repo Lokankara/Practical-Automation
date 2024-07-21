@@ -35,14 +35,12 @@ public abstract class TestRunner {
 
     @AfterAll
     public static void afterAll() {
-        presentationSleep();
         DriverUtils.quit();
     }
 
     @BeforeEach
     public void beforeEach() {
         // SearchStrategy.setImplicitStrategy();
-        presentationSleep(); // For Presentation ONLY
     }
 
     @AfterEach

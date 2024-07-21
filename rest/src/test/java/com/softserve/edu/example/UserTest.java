@@ -48,8 +48,6 @@ class UserTest {
         // Random number
         Random rand = new Random();
         String number = String.valueOf(rand.nextInt(100000));
-        presentationSleep(); // For Presentation
-        //
 
         ObjectMapper mapper = new ObjectMapper();
         //API by okhttp
@@ -59,8 +57,6 @@ class UserTest {
         SignRequest signRequest = new SignRequest("a1234" + number + "@gmail.com", "SimpleC",
                 "SimpleC", "0671234567", "Qwerty_1");
         String jsonBody = mapper.writeValueAsString(signRequest);
-        presentationSleep(); // For Presentation
-        //
         // Sign up
         RequestBody requestBody = RequestBody.create(jsonBody,
                 MediaType.parse("application/json; charset=utf-8"));
@@ -72,7 +68,6 @@ class UserTest {
         Response response = client.newCall(request).execute();
         String jsonResult = Objects.requireNonNull(response.body()).string();
         SignInResponse signInResponse = mapper.readValue(jsonResult, SignInResponse.class);
-        presentationSleep(); // For Presentation
         //
         Assertions.assertTrue(response.isSuccessful());
         Assertions.assertEquals(200, response.code());
@@ -120,23 +115,13 @@ class UserTest {
                 implicitlyWait(Duration.ofSeconds(IMPLICITLY_WAIT_SECONDS));
         driver.manage().window().maximize();
 
-        presentationSleep(); // For Presentation
-        //
-        // BeforeEach
         driver.get(BASE_URL);
 
-        presentationSleep(); // For Presentation
-        //
-        // Open caret
         driver.findElement(By.cssSelector("div.user-profile span.anticon.anticon-caret-down")).click();
 
-        presentationSleep(); // For Presentation
-        //
         // Open login window
         driver.findElement(By.cssSelector("li[data-menu-id*='login'] span.ant-dropdown-menu-title-content")).click();
 
-        presentationSleep(); // For Presentation
-        //
         // Enter email
         driver.findElement(By.id("basic_email")).click();
         driver.findElement(By.id("basic_email")).clear();
@@ -161,7 +146,6 @@ class UserTest {
 
         presentationSleep(); // For Presentation
         //
-        // Check
         Assertions.assertTrue(popupMessage.get(0).getText().contains("Ви успішно залогувалися!"));
 
         presentationSleep(); // For Presentation

@@ -8,7 +8,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 
 interface Browser {
-    WebDriver getBrowser(); // Factory method
+    WebDriver getBrowser();
 }
 
 class FirefoxTemporary implements Browser {
@@ -76,7 +76,7 @@ public enum Browsers {
 
     public WebDriver runBrowser() {
         WebDriver driver = browser.getBrowser();
-        driver.manage().window().maximize(); // Move to classes
+        driver.manage().window().maximize();
         return driver;
     }
 }

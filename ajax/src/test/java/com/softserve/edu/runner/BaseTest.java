@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInfo;
 import org.junit.jupiter.api.TestInstance;
 import org.openqa.selenium.Cookie;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -55,9 +56,9 @@ public abstract class BaseTest {
             chromeOptions.addArguments("--disable-dev-shm-usage");
         }
         driver = new ChromeDriver(chromeOptions);
-        driver.manage().window().maximize();
         executor = (JavascriptExecutor) driver;
         driver.manage().timeouts().implicitlyWait(Duration.ZERO);
+        driver.manage().window().setSize(new Dimension(1400, 997));
     }
 
     @AfterAll

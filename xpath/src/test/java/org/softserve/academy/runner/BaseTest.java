@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.TestInfo;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
@@ -79,6 +80,7 @@ public abstract class BaseTest {
                 chromeOptions.addArguments("--disable-dev-shm-usage");
             }
             driver = new ChromeDriver(chromeOptions);
+            driver.manage().window().setSize(new Dimension(1400, 998));
             executor = (JavascriptExecutor) driver;
             wait = new WebDriverWait(driver, Duration.ofSeconds(5));
         } catch (Exception e) {

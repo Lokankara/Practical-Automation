@@ -32,15 +32,12 @@ class SomeTest extends TestRunner {
 
     @Test
     void checkSmoke() {
-        // Steps
         HomePage homePage = loadApplication()
                 .gotoClubPage()
                 .gotoNewsPage()
                 .gotoAboutUsPage()
                 .gotoUkrainianServicePage()
                 .gotoHomePage();
-        presentationSleep();
-        // Check
         Assertions.assertTrue(homePage.getTeachLabelText().contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE));
     }
 
@@ -53,23 +50,16 @@ class SomeTest extends TestRunner {
     @ParameterizedTest(name = "{index} => email={0}, password={1}")
     @MethodSource("validUserProvider")
     void checkSuccessfulLogin(IUser user) {
-        // Steps
         HomePage homePage = loadApplication()
                 .openLoginModal()
                 .successfulLogin(user.getEmail(), user.getPassword());
         String popupMessage = homePage.getPopupMessageLabelText();
         presentationSleep();
-        //
-        // Check pop-up message
         Assertions.assertEquals(TopPart.POPUP_MESSAGE_SUCCESSFULLY, popupMessage);
-        //
-        // Check
         Assertions.assertTrue(homePage.getTeachLabelText().contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE));
         presentationSleep();
-        //
         homePage = homePage.signoutUser();
         Assertions.assertFalse(homePage.isUserLogged());
-        presentationSleep();
     }
 
 
@@ -82,16 +72,12 @@ class SomeTest extends TestRunner {
     @ParameterizedTest(name = "{index} => email={0}, password={1}")
     @MethodSource("invalidUserProvider")
     void checkUnsuccessfulLogin(IUser user) {
-        // Steps
         LoginModal loginModal = loadApplication()
                 .openLoginModal()
                 .unsuccessfulLoginPage(user.getEmail(), user.getPassword());
         String popupMessage = loginModal.getPopupMessageLabelText();
-        presentationSleep();
 
-        // Check pop-up message
         Assertions.assertEquals(LoginModal.POPUP_MESSAGE_UNSUCCESSFULLY, popupMessage);
-        presentationSleep();
     }
 
     private static Stream<Arguments> challengeTeachProvider() {
@@ -109,13 +95,10 @@ class SomeTest extends TestRunner {
                 .playVideoContent();
         presentationSleep(4);
         System.out.println("\tyoutubeFrame.getYoutubeLinkText() = " + youtubeFrame.getYoutubeLinkText());
-        //
-        // Check Youtube Frame
         Assertions.assertTrue(youtubeFrame.getYoutubeLinkText().contains(urlContents.getSearchVideo()));
         presentationSleep();
 
         youtubeFrame.gotoChallengeTeachPage().gotoHomePage();
-        presentationSleep(4);
     }
 
     private static Stream<Arguments> cityProvider() {
@@ -133,12 +116,8 @@ class SomeTest extends TestRunner {
                 .chooseCity(city)
                 .getClubContainer()
                 .getFirstClubComponent();
-        //
-        // Check first club address
         Assertions.assertTrue(ClubComponent.getAddressLabelText().contains(city.getCity()));
-        presentationSleep();
     }
-
 
     private static Stream<Arguments> clubProvider0() {
         return Stream.of(
@@ -162,10 +141,7 @@ class SomeTest extends TestRunner {
                 .chooseCity(club.getLocation().getCity())
                 .getClubContainer()
                 .getClubComponentByPartialTitle(club.getName());
-        //
-        // Check club titles and descriptions
         Assertions.assertTrue(ClubComponent.getTitleLinkText().contains(club.getName()));
-        presentationSleep();
     }
 
     @ParameterizedTest(name = "{index} => clubContents={0}")
@@ -175,10 +151,7 @@ class SomeTest extends TestRunner {
                 .gotoClubPage()
                 .chooseCity(clubContents.getCity())
                 .gotoAdvancedClubPage();
-        //
-        // Use pagination to search club
         Assertions.assertTrue(advancedClubPage.isExistClubByPartialTitle(clubContents.getTitle()));
-        presentationSleep();
     }
 
     private static Stream<Arguments> commentProvider() {
@@ -196,10 +169,7 @@ class SomeTest extends TestRunner {
                 .getClubContainer()
                 .getClubComponentByPartialTitle(clubContents.getTitle())
                 .openClubDetailsPage();
-        //
-        // Check comment exist
         Assertions.assertTrue(clubDetailsPage.getCommentsContainer()
                 .isExistClubComponentByPartialAuthor(commentContents.getAuthor()));
-        presentationSleep();
     }
 }

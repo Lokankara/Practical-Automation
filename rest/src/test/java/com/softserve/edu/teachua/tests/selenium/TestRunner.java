@@ -32,13 +32,11 @@ public abstract class TestRunner {
 
     @AfterAll
     public static void afterAll() {
-        presentationSleep(); // For Presentation ONLY
         DriverUtils.quit();
     }
 
     @BeforeEach
     public void beforeEach() {
-        presentationSleep(); // For Presentation ONLY
     }
 
     @AfterEach
@@ -52,8 +50,6 @@ public abstract class TestRunner {
         }
         DriverUtils.deleteCookies();
         DriverUtils.deleteTokens();
-        presentationSleep(); // For Presentation ONLY
-        //
     }
 
     protected HomePage loadApplication() {

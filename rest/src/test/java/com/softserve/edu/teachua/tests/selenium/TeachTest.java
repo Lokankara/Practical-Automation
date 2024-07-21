@@ -22,32 +22,22 @@ class TeachTest extends TestRunner {
                 .gotoAboutUsPage()
                 .gotoUkrainianServicePage()
                 .gotoHomePage();
-        presentationSleep();
-        //
-        // Check
         Assertions.assertTrue(homePage.getTeachLabelText().contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE));
     }
 
     @ParameterizedTest(name = "{index} => email={0}, password={1}")
     @CsvSource({"yagifij495@eqvox.com, Qwerty_1"})
     void checkSuccessfulLogin(String email, String password) {
-        // Steps
         HomePage homePage = loadApplication()
                 .openLoginModal()
                 .successfulLogin(email, password);
         String popupMessage = homePage.getPopupMessageLabelText();
         presentationSleep();
-        //
-        // Check pop-up message
         Assertions.assertEquals(TopPart.POPUP_MESSAGE_SUCCESSFULLY, popupMessage);
-        //
-        // Check
         Assertions.assertTrue(homePage.getTeachLabelText().contains(HomePage.BEGIN_TEACH_LABEL_MESSAGE));
         presentationSleep();
-        //
         homePage = homePage.signoutUser();
         Assertions.assertFalse(homePage.isUserLogged());
-        presentationSleep();
     }
 
     @ParameterizedTest(name = "{index} => email={0}, password={1}")
@@ -58,17 +48,12 @@ class TeachTest extends TestRunner {
                 .openLoginModal()
                 .unsuccessfulLoginPage(email, password);
         String popupMessage = loginModal.getPopupMessageLabelText();
-        presentationSleep();
-        //
-        // Check pop-up message
         Assertions.assertEquals(LoginModal.POPUP_MESSAGE_UNSUCCESSFULLY, popupMessage);
-        presentationSleep();
     }
 
     @ParameterizedTest(name = "{index} => searchText={0}, clubTitle={1}")
     @CsvSource({"Dream Team, Школа танців Dream Team"})
     void checkClubExist(String searchText, String clubTitle) {
-        // updated
         ClubComponent clubComponent = loadApplication()
                 .successfulSearchClub(searchText)
                 .getClubContainer()
@@ -83,8 +68,6 @@ class TeachTest extends TestRunner {
     void checkClubNotExist(String searchText) {
         ClubNotFoundPage clubNotFoundPage = loadApplication()
                 .unsuccessfulSearchClub(searchText);
-        //
-        // Check club title
         Assertions.assertEquals(ClubNotFoundPage.NOT_FOUND_MASSAGE, clubNotFoundPage.getNotFoundLabelText());
     }
 
@@ -99,21 +82,15 @@ class TeachTest extends TestRunner {
                 .getClubContainer()
                 .getClubComponentByPartialTitle(searchText)
                 .openClubDetailsPage()
-                //
                 //.gotoClubDetailsPage()
-                //
                 .openClubCommentModal()
                 .submitComment(commentText);
-        //
-        // Check comment text
         System.out.println("\tclubDetailsPage.getCommentContentLabelText() = "
                 + clubDetailsPage.getCommentsContainer().getFirstCommentComponent().getCommentLabelText());
         Assertions.assertEquals(commentText, clubDetailsPage
                 .getCommentsContainer().getFirstCommentComponent().getCommentLabelText());
-        //
         HomePage homePage = clubDetailsPage.signoutUser();
         Assertions.assertFalse(homePage.isUserLogged());
-        presentationSleep();
     }
 
     @ParameterizedTest(name = "{index} => searchText={0}, commentText={1}")
@@ -121,7 +98,6 @@ class TeachTest extends TestRunner {
     void checkExistComment(String searchText, String commentText) {
         ClubDetailsPage clubDetailsPage = loadApplication()
                 .successfulSearchClub(searchText)
-                //Updated
                 .getClubContainer()
                 .getClubComponentByPartialTitle(searchText)
                 .openClubInfoModal()
@@ -129,7 +105,6 @@ class TeachTest extends TestRunner {
                 //.openClubInfoModal()
                 .gotoClubDetailsPage();
         //
-        // Check comment text
         System.out.println("\tclubDetailsPage.getCommentContentLabelText() = "
                 + clubDetailsPage.getCommentsContainer().getFirstCommentComponent().getCommentLabelText());
         Assertions.assertEquals(commentText, clubDetailsPage
@@ -137,6 +112,5 @@ class TeachTest extends TestRunner {
         //
         HomePage homePage = clubDetailsPage.gotoHomePage();
         Assertions.assertFalse(homePage.isUserLogged());
-        presentationSleep();
     }
 }
