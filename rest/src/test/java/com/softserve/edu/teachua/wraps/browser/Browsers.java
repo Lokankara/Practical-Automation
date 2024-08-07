@@ -67,10 +67,10 @@ public enum Browsers {
     CHROME_TEMPORARY(new ChromeTemporary()),
     CHROME_IGNORESSL(new ChromeIgnoreSSL()),
     CHROME_WITHOUTUI(new ChromeWithoutUI());
-    //
+
     private Browser browser;
 
-    private Browsers(Browser browser) {
+    Browsers(Browser browser) {
         this.browser = browser;
     }
 

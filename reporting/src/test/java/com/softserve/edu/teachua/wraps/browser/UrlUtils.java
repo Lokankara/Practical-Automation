@@ -2,9 +2,11 @@ package com.softserve.edu.teachua.wraps.browser;
 
 import com.softserve.edu.teachua.tools.PropertiesUtils;
 import com.softserve.edu.teachua.tools.ReportUtils;
+import lombok.Getter;
 
 public final class UrlUtils {
     private static final String DEFAULT_URL = "http://speak-ukrainian.eastus2.cloudapp.azure.com/dev/";
+    @Getter
     private static String baseUrl;
 
     static {
@@ -23,9 +25,5 @@ public final class UrlUtils {
         } else {
             ReportUtils.logAction("Initialized base URL: " + baseUrl);
         }
-    }
-
-    public static String getBaseUrl() {
-        return baseUrl;
     }
 }

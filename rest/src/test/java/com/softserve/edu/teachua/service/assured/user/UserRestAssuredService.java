@@ -68,9 +68,9 @@ public class UserRestAssuredService extends RestAssuredBase implements UserAssur
                 .body(newUser)
                 .post(SIGNUP).then()
                 .statusCode(200)
-                .body(JsonSchemaValidator.matchesJsonSchema(Objects.requireNonNull(userSchema)))
-                .assertThat()
                 .body(notNullValue())
+                .assertThat()
+                .body(JsonSchemaValidator.matchesJsonSchema(Objects.requireNonNull(userSchema)))
                 .extract()
                 .as(SignInResponse.class);
     }
